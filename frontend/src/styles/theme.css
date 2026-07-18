@@ -1,0 +1,25 @@
+:root{
+    /* Brand Colors */
+    --primary:#2E7D32;
+    --primary-light:#4CAF50;
+    --secondary:#2563EB;
+
+    /* Status Colors */
+    --success:#22C55E;
+    --warning:#F59E0B;
+    --danger:#EF4444;
+
+    /* Background */
+    --background:#F8FAFC;
+    --surface:#FFFFFF;
+
+    /* Text */
+    --text:#1F2937;
+    --text-light:#6B7280;
+
+    /* Effects */
+    --radius:18px;
+    --shadow:0 12px 35px rgba(0,0,0,.08);
+
+    --transition:.3s ease;
+}
