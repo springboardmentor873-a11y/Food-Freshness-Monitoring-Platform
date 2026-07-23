@@ -7,17 +7,30 @@ import ResultCard from "../components/prediction/ResultCard";
 import Footer from "../components/layout/Footer";
 
 function Home() {
-
   const [prediction, setPrediction] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   return (
     <>
       <Navbar />
+
       <Hero />
 
-      <UploadCard setPrediction={setPrediction} />
+      <UploadCard
+        setPrediction={setPrediction}
+        setUploadedImage={setUploadedImage}
+      />
 
-      <ResultCard prediction={prediction} />
+      {prediction && (
+        <ResultCard
+          prediction={prediction}
+          uploadedImage={uploadedImage}
+          onReset={() => {
+            setPrediction(null);
+            setUploadedImage(null);
+          }}
+        />
+      )}
 
       <Footer />
     </>

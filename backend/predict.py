@@ -3,6 +3,7 @@ import json
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications.resnet50 import preprocess_input
+from food_info import FOOD_INFO
 
 # Define the absolute path to the model and class names
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -119,13 +120,27 @@ def predict_image(image_path):
             
        # Split the class name into food name and freshness
         food_name, freshness = class_name.rsplit("_", 1)
+        food_data = FOOD_INFO.get(food_name, {}).get(
+            freshness,
+            {
+                "shelf_life": "Unknown",
+                "storage": "Unknown",
+                "recommendation": "No recommendation available.",
+                "risk_level": "Unknown"
+            }
+        )
 
         # Return the prediction result
         return {
             "class_name": class_name,
             "food_name": food_name,
             "freshness": freshness,
-            "confidence": confidence_percentage
+            "confidence": confidence_percentage,
+
+            "shelf_life": food_data["shelf_life"],
+            "storage": food_data["storage"],
+            "recommendation": food_data["recommendation"],
+            "risk_level": food_data["risk_level"]
         }
         
     except Exception as e:

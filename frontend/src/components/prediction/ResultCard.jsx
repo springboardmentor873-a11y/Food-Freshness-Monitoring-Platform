@@ -1,112 +1,348 @@
-import React from 'react';
-import { FaCheckCircle, FaExclamationTriangle, FaRedo, FaLeaf } from 'react-icons/fa';
-import './ResultCard.css';
+import React from "react";
+import { generatePDF } from "../../utils/pdfGenerator";
+import { FaFilePdf } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaRedo,
+  FaLeaf,
+  FaClock,
+  FaWarehouse,
+  FaShieldAlt,
+  FaBrain,
+  FaInfoCircle,
+} from "react-icons/fa";
+
+import "./ResultCard.css";
+
 const foodEmojiMap = {
-  apple: '🍎',
-  banana: '🍌',
-  grapes: '🍇',
-  orange: '🍊',
-  tomato: '🍅',
-  potato: '🥔',
-  carrot: '🥕',
-  cucumber: '🥒',
-  'bell pepper': '🫑',
-  mango: '🥭',
-  watermelon: '🍉',
-  strawberry: '🍓',
-  lime: '🍋',
-  pomegranate: '❤️',
-  guava: '🟢',
+  apple: "🍎",
+  banana: "🍌",
+  grapes: "🍇",
+  orange: "🍊",
+  tomato: "🍅",
+  potato: "🥔",
+  carrot: "🥕",
+  cucumber: "🥒",
+  "bell pepper": "🫑",
+  mango: "🥭",
+  watermelon: "🍉",
+  strawberry: "🍓",
+  lime: "🍋",
+  pomegranate: "❤️",
+  guava: "🥝",
+  "bitter gourd": "🥒",
+  kaki: "🟠",
+  jujube: "🍏",
 };
-const ResultCard = ({ prediction }) => {
+
+const ResultCard = ({ prediction, uploadedImage, onReset }) => {
+
   if (!prediction) return null;
-  const { food_name, freshness, confidence } = prediction;
-  // 1. Determine Emoji dynamically based on food_name
-  const normalizedFoodName = food_name ? food_name.toLowerCase() : '';
-  const emoji = foodEmojiMap[normalizedFoodName] || '🍽️';
-  // 2. Identify UI styling states based on freshness
-  const isFresh = freshness?.toLowerCase() === 'fresh';
-  const badgeClass = isFresh ? 'badge-fresh' : 'badge-rotten';
-  const progressClass = isFresh ? 'bg-success' : 'bg-danger';
-  const iconColor = isFresh ? 'text-success' : 'text-danger';
-  // Format confidence to 2 decimal places if needed
-  const confidenceValue = parseFloat(confidence).toFixed(2);
+
+  const {
+    food_name,
+    freshness,
+    confidence,
+    shelf_life,
+    storage,
+    recommendation,
+    risk_level,
+  } = prediction;
+  
+  const handleDownload = () => {
+    generatePredictionPDF(prediction);
+  };
+
+  const emoji =
+    foodEmojiMap[food_name?.toLowerCase()] || "🍽️";
+
+  const isFresh =
+    freshness?.toLowerCase() === "fresh";
+
+  const confidenceValue = Number(confidence).toFixed(2);
+
+  let confidenceLabel = "Low Confidence";
+
+  if (confidenceValue >= 95)
+    confidenceLabel = "Excellent Prediction";
+  else if (confidenceValue >= 85)
+    confidenceLabel = "High Confidence";
+  else if (confidenceValue >= 70)
+    confidenceLabel = "Moderate Confidence";
+
   return (
-    <div className="container py-4 d-flex justify-content-center w-100">
-      <div className="result-card card shadow-lg border-0 p-4">
-        
-        {/* Food Header Section */}
-        <div className="d-flex align-items-center mb-4">
-          <div className="food-emoji me-3 d-flex align-items-center justify-content-center shadow-sm">
-            {emoji}
+    <section id="result-section" className="result-wrapper">
+
+      <div className="result-card">
+
+        {/* HEADER */}
+
+        <div className="result-header">
+
+          <div
+            className={`emoji-ring ${
+              isFresh ? "ring-fresh" : "ring-rotten"
+            }`}
+          >
+            <div className="food-emoji">{emoji}</div>
           </div>
-          <div>
-            <h2 className="mb-1 food-name fw-bolder">{food_name || 'Unknown Item'}</h2>
-            <span className={`badge rounded-pill fw-semibold ${badgeClass}`}>
-              {freshness || 'Unknown'}
-            </span>
+
+          <div className="header-content">
+
+            <h2>{food_name}</h2>
+
+            <div className="header-row">
+
+              <span
+                className={`status-badge ${
+                  isFresh ? "fresh" : "rotten"
+                }`}
+              >
+                {freshness}
+              </span>
+
+              <div className="confidence-chip">
+
+                <FaBrain />
+
+                <span>{confidenceValue}%</span>
+
+              </div>
+
+            </div>
+
           </div>
+
         </div>
-        {/* Confidence Progress Section */}
-        <div className="confidence-section mb-4">
-          <div className="d-flex justify-content-between align-items-end mb-2">
-            <span className="fw-semibold text-secondary">AI Confidence</span>
-            <span className="fw-bold fs-5 text-dark">{confidenceValue}%</span>
+
+        {/* CONFIDENCE */}
+
+        <div className="section-block">
+
+          <div className="section-title-row">
+
+            <span>AI Confidence</span>
+
+            <strong>{confidenceValue}%</strong>
+
           </div>
-          <div className="progress rounded-pill overflow-hidden" style={{ height: '14px' }}>
-            <div 
-              className={`progress-bar progress-bar-striped progress-bar-animated ${progressClass}`} 
-              role="progressbar" 
-              style={{ width: `${confidenceValue}%` }} 
-              aria-valuenow={confidenceValue} 
-              aria-valuemin="0" 
-              aria-valuemax="100"
-            ></div>
+
+          <div className="confidence-bar">
+
+            <div
+              className={`confidence-fill ${
+                isFresh
+                  ? "fill-fresh"
+                  : "fill-rotten"
+              }`}
+              style={{
+                "--progress": `${confidenceValue}%`,
+              }}
+            />
+
           </div>
+
+          <div className="confidence-status">
+
+            {confidenceLabel}
+
+          </div>
+
         </div>
-        {/* AI Recommendation Section */}
-        <div className="recommendation-section p-3 rounded-4 mb-4 bg-light border border-light-subtle">
-          <h5 className="fw-bold mb-3 d-flex align-items-center">
-            <FaLeaf className={`me-2 ${iconColor}`} /> AI Recommendation
-          </h5>
-          {isFresh ? (
-            <ul className="list-unstyled mb-0">
-              <li className="mb-2 d-flex align-items-start">
-                <FaCheckCircle className="text-success mt-1 me-2 flex-shrink-0" /> 
-                <span className="fw-semibold text-dark">Safe for consumption</span>
-              </li>
-              <li className="mb-2 d-flex align-items-start">
-                <FaCheckCircle className="text-success mt-1 me-2 flex-shrink-0" /> 
-                <span className="text-secondary">Food appears fresh.</span>
-              </li>
-              <li className="d-flex align-items-start">
-                <FaCheckCircle className="text-success mt-1 me-2 flex-shrink-0" /> 
-                <span className="text-secondary">Store properly for maximum freshness.</span>
-              </li>
-            </ul>
-          ) : (
-            <ul className="list-unstyled mb-0">
-              <li className="mb-2 d-flex align-items-start">
-                <FaExclamationTriangle className="text-danger mt-1 me-2 flex-shrink-0" /> 
-                <span className="fw-bold text-danger">Not recommended for consumption</span>
-              </li>
-              <li className="mb-2 d-flex align-items-start">
-                <FaExclamationTriangle className="text-secondary opacity-50 mt-1 me-2 flex-shrink-0" /> 
-                <span className="text-secondary">Discard if spoilage is confirmed.</span>
-              </li>
-              <li className="d-flex align-items-start">
-                <FaExclamationTriangle className="text-secondary opacity-50 mt-1 me-2 flex-shrink-0" /> 
-                <span className="text-secondary">Avoid consuming if odor or texture has changed.</span>
-              </li>
-            </ul>
-          )}
+
+        {/* INSIGHTS */}
+
+        <div className="insights-grid">
+
+          <div className="insight-card">
+
+            <div className="insight-icon green">
+
+              <FaClock />
+
+            </div>
+
+            <div>
+
+              <small>Shelf Life</small>
+
+              <h4>{shelf_life}</h4>
+
+            </div>
+
+          </div>
+
+          <div className="insight-card">
+
+            <div className="insight-icon blue">
+
+              <FaWarehouse />
+
+            </div>
+
+            <div>
+
+              <small>Storage</small>
+
+              <h4>{storage}</h4>
+
+            </div>
+
+          </div>
+
+          <div className="insight-card full-width">
+
+            <div
+              className={`insight-icon ${
+                isFresh ? "green" : "red"
+              }`}
+            >
+              <FaShieldAlt />
+            </div>
+
+            <div>
+
+              <small>Risk Level</small>
+
+              <h4
+                className={
+                  risk_level === "Low"
+                    ? "risk-low"
+                    : risk_level === "Medium"
+                    ? "risk-medium"
+                    : "risk-high"
+                }
+              >
+                {risk_level === "Low" && "🟢 Low Risk"}
+
+                {risk_level === "Medium" &&
+                  "🟠 Medium Risk"}
+
+                {risk_level === "High" &&
+                  "🔴 High Risk"}
+              </h4>
+
+            </div>
+
+          </div>
+
         </div>
-        {/* Action Button Section */}
-        <button className="btn btn-outline-success btn-lg w-100 fw-bold d-flex align-items-center justify-content-center rounded-pill action-btn">
-          <FaRedo className="me-2" /> Analyze New Image
+
+        {/* RECOMMENDATION */}
+
+        <div className="recommendation-box">
+
+          <div className="recommendation-title">
+
+            <FaLeaf
+              className={
+                isFresh
+                  ? "text-green"
+                  : "text-red"
+              }
+            />
+
+            <span>AI Recommendation</span>
+
+          </div>
+
+          <ul>
+
+            <li>
+
+              {isFresh ? (
+                <FaCheckCircle className="text-green" />
+              ) : (
+                <FaExclamationTriangle className="text-red" />
+              )}
+
+              <span>{recommendation}</span>
+
+            </li>
+
+            {isFresh ? (
+              <>
+                <li>
+
+                  <FaCheckCircle className="text-green" />
+
+                  Safe for consumption
+
+                </li>
+
+                <li>
+
+                  <FaCheckCircle className="text-green" />
+
+                  Store properly to maximize freshness.
+
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+
+                  <FaExclamationTriangle className="text-red" />
+
+                  Avoid consuming spoiled food.
+
+                </li>
+
+                <li>
+
+                  <FaExclamationTriangle className="text-red" />
+
+                  Dispose safely if spoilage is confirmed.
+
+                </li>
+              </>
+            )}
+
+          </ul>
+
+        </div>
+
+        {/* DISCLAIMER */}
+
+        <div className="result-disclaimer">
+
+          <FaInfoCircle />
+
+          <span>
+
+            Prediction generated using AI computer vision.
+
+            Always inspect food manually before consumption.
+
+          </span>
+
+        </div>
+
+        {/* ACTION BUTTONS */}
+
+      <div className="result-actions">
+
+        <button
+          className="secondary-btn"
+          onClick={() => generatePDF(prediction, uploadedImage)}
+        >
+          📄 Download AI Report
         </button>
+        <button
+          className="primary-btn"
+          onClick={onReset}
+        >
+          <FaRedo className="me-2" />
+          Analyze Another Image
+        </button>
+
       </div>
-    </div>
+
+      </div>
+
+    </section>
   );
-};
+}
+
 export default ResultCard;

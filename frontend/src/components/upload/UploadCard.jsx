@@ -3,12 +3,14 @@ import {
   FaCloudUploadAlt,
   FaTrashAlt,
   FaImage,
+  FaCheckCircle,
+  FaRobot,
 } from "react-icons/fa";
 
 import "./UploadCard.css";
 import api from "../../services/api";
 
-function UploadCard({ setPrediction }) {
+function UploadCard({ setPrediction, setUploadedImage }){
   const inputRef = useRef(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -16,91 +18,77 @@ function UploadCard({ setPrediction }) {
   const [loading, setLoading] = useState(false);
 
   const handleAnalyze = async () => {
-  if (!selectedImage) return;
+    if (!selectedImage) return;
 
-  const formData = new FormData();
-  formData.append("file", selectedImage.file);
+    const formData = new FormData();
+    formData.append("file", selectedImage.file);
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const response = await api.post("/predict", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+      const response = await api.post("/predict", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    setPrediction(response.data);
+      setPrediction(response.data);
 
-  } catch (error) {
-  console.log("========== ERROR ==========");
+      setTimeout(() => {
+        document
+          .getElementById("result-section")
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+      }, 100);
 
-  console.log(error);
-
-  console.log("Message:", error.message);
-
-  if (error.response) {
-    console.log("Status:", error.response.status);
-    console.log("Data:", error.response.data);
-  }
-
-  if (error.request) {
-    console.log("Request:", error.request);
-  }
-
-  alert("Prediction failed.");
-}finally {
-    setLoading(false);
-}
-};
+    } catch (error) {
+      console.log(error);
+      alert("Prediction failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleFile = (file) => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Please upload a valid image.");
-      return;
+      return alert("Only image files are allowed.");
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Image size must be less than 5 MB.");
-      return;
+    if (file.size > 10 * 1024 * 1024) {
+      return alert("Maximum size is 10 MB.");
     }
 
-    setSelectedImage({
-      file,
-      preview: URL.createObjectURL(file),
-    });
-  };
+    const reader = new FileReader();
 
-  const handleInputChange = (e) => {
-    handleFile(e.target.files[0]);
-  };
+    reader.onloadend = () => {
+      const imageBase64 = reader.result;
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragActive(false);
+      setSelectedImage({
+        file,
+        preview: imageBase64,
+      });
 
-    if (e.dataTransfer.files.length > 0) {
-      handleFile(e.dataTransfer.files[0]);
-    }
+      setUploadedImage(imageBase64);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const removeImage = () => {
-    if (selectedImage) {
+   if (selectedImage?.preview?.startsWith("blob:")) {
       URL.revokeObjectURL(selectedImage.preview);
     }
-
     setSelectedImage(null);
 
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
-    <section className="upload-section">
-
+    <section className="upload-section" id="upload-section">
       <div className="container">
 
         <div className="upload-card">
@@ -108,55 +96,54 @@ function UploadCard({ setPrediction }) {
           <h2>Upload Food Image</h2>
 
           <p className="upload-subtitle">
-            Upload an image to analyze its freshness using AI.
+            Drag & Drop or browse your image for AI-powered freshness analysis.
           </p>
 
           {!selectedImage ? (
 
             <div
               className={`drop-zone ${dragActive ? "active" : ""}`}
+              onClick={() => inputRef.current.click()}
               onDragOver={(e) => {
                 e.preventDefault();
                 setDragActive(true);
               }}
               onDragLeave={() => setDragActive(false)}
-              onDrop={handleDrop}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragActive(false);
+                handleFile(e.dataTransfer.files[0]);
+              }}
             >
 
-              <FaCloudUploadAlt
-                className="upload-icon"
-              />
+              <FaCloudUploadAlt className="upload-icon" />
 
               <h4>Drag & Drop Image Here</h4>
 
-              <p>or</p>
+              <p>or click anywhere to browse</p>
 
-              <button
-                className="btn btn-success"
-                onClick={() => inputRef.current.click()}
-              >
-                Choose Image
+              <button className="browse-btn">
+                Browse Files
               </button>
 
               <input
-                type="file"
                 hidden
                 ref={inputRef}
-                accept="image/*"
-                onChange={handleInputChange}
+                type="file"
+                accept="image/*,.webp"
+                onChange={(e) => handleFile(e.target.files[0])}
               />
 
               <div className="upload-info">
 
-                <small>
-                  Supported: JPG, JPEG, PNG
-                </small>
-
-                <small>
-                  Maximum Size: 5 MB
-                </small>
+                <span>JPG</span>
+                <span>PNG</span>
+                <span>JPEG</span>
+                <span>WEBP</span>
 
               </div>
+
+              <small>Maximum Size : 10 MB</small>
 
             </div>
 
@@ -166,38 +153,55 @@ function UploadCard({ setPrediction }) {
 
               <img
                 src={selectedImage.preview}
-                alt="Preview"
+                alt="preview"
               />
 
               <div className="image-details">
 
                 <h5>
-                  <FaImage className="me-2" />
+
+                  <FaImage />
+
                   {selectedImage.file.name}
+
                 </h5>
 
                 <p>
+
                   {(selectedImage.file.size / 1024 / 1024).toFixed(2)} MB
+
                 </p>
+
+                <div className="ready">
+
+                  <FaCheckCircle />
+
+                  Ready for AI Analysis
+
+                </div>
 
               </div>
 
               <div className="button-group">
 
                 <button
-                  className="btn btn-outline-danger"
+                  className="remove-btn"
                   onClick={removeImage}
                 >
-                  <FaTrashAlt className="me-2" />
+                  <FaTrashAlt />
+
                   Remove
                 </button>
 
                 <button
-                    className="btn btn-success"
-                    onClick={handleAnalyze}
-                    disabled={loading}
+                  className="analyze-btn"
+                  onClick={handleAnalyze}
+                  disabled={loading}
                 >
-                    {loading ? "Analyzing..." : "Analyze Freshness"}
+                  <FaRobot />
+
+                  {loading ? "Analyzing..." : "Analyze Food"}
+
                 </button>
 
               </div>
