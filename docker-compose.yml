@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ffmp_user
+      POSTGRES_PASSWORD: ffmp_password
+      POSTGRES_DB: food_freshness
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://ffmp_user:ffmp_password@db:5432/food_freshness
+      SECRET_KEY: change_me_to_a_long_random_string
+      ENVIRONMENT: production
+    depends_on:
+      - db
+    volumes:
+      - uploads_data:/app/uploads
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db_data:
+  uploads_data:
