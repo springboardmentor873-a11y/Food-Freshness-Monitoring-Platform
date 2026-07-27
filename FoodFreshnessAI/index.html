@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FreshSense AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="background-blobs"></div>
+<div class="floating-background" id="floatingBackground"></div>
+
+<header class="header">
+<h1 class="logo">FreshSense AI</h1>
+<p class="tagline">Food Freshness Monitoring Platform</p>
+</header>
+
+<main class="container">
+
+<section class="main-panel">
+<h2>Analyze Food Freshness</h2>
+<p class="description">Upload a fruit or vegetable image and let AI predict freshness, edibility, confidence and remaining shelf life.</p>
+
+<input type="file" id="imageInput" accept="image/*" hidden>
+
+<label for="imageInput" class="upload-area">
+<h3>Upload Food Image</h3>
+<p>Click here to select an image</p>
+</label>
+
+<div class="preview-container">
+<img id="previewImage" alt="Food Preview">
+</div>
+
+
+
+<button id="analyzeBtn">Analyze Freshness</button>
+
+<div id="loading" class="loading hidden">
+<div class="spinner"></div>
+<p>AI is analyzing your image...</p>
+</div>
+</section>
+
+<section id="resultSection" class="result-section hidden">
+<h2>AI Analysis</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Food Category</h3>
+<p id="foodCategory">-</p>
+</div>
+
+<div class="card">
+<h3>Freshness</h3>
+<p id="freshness">-</p>
+</div>
+
+<div class="card">
+<h3>Edibility</h3>
+<p id="edible">-</p>
+</div>
+
+<div class="card">
+<h3>Confidence</h3>
+<div class="confidence-container">
+<div id="confidenceBar" class="confidence-bar"></div>
+</div>
+<p id="confidenceText">-</p>
+</div>
+
+<div class="card">
+<h3>Shelf Life</h3>
+<p id="shelfLife">-</p>
+</div>
+
+<div class="card">
+<h3>Storage Recommendation</h3>
+<p id="recommendation">-</p>
+</div>
+
+</div>
+
+<button id="resetBtn">Analyze Another Image</button>
+</section>
+
+<section class="history-section">
+<h2>Analysis History</h2>
+<div id="historyContainer"></div>
+</section>
+
+</main>
+
+<footer>
+<p>FreshSense AI © 2026 | AI Food Quality Monitoring System</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

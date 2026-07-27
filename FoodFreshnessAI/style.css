@@ -1,0 +1,62 @@
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{min-height:100vh;background:#F4F3EF;color:#111;font-family:"Inter",Arial,sans-serif;overflow-x:hidden}
+.background-blobs{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none}
+.background-blobs:before,.background-blobs:after{content:"";position:absolute;width:650px;height:650px;border-radius:50%;filter:blur(170px);opacity:.18}
+.background-blobs:before{background:#eadcc7;top:-220px;left:-180px;animation:blob1 18s ease-in-out infinite alternate}
+.background-blobs:after{background:#e8d5c1;right:-180px;bottom:-220px;animation:blob2 20s ease-in-out infinite alternate}
+@keyframes blob1{0%{transform:translate(0)}100%{transform:translate(120px,80px)}}
+@keyframes blob2{0%{transform:translate(0)}100%{transform:translate(-120px,-80px)}}
+.floating-background{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.floating-food{
+position:absolute;
+object-fit:contain;
+pointer-events:none;
+opacity:.18;
+animation:floatFood linear infinite;
+filter:drop-shadow(0 8px 12px rgba(0,0,0,.08));
+}
+@keyframes floatFood{
+0%{
+transform:translateY(120vh) rotate(0deg);
+}
+100%{
+transform:translateY(-120vh) rotate(360deg);
+}
+}
+.header,.container,footer{position:relative;z-index:2}
+.header{text-align:center;padding:60px 20px 35px}
+.logo{font-family:"Playfair Display",serif;font-size:54px;font-weight:700}
+.tagline{margin-top:12px;color:#777;letter-spacing:1px;font-size:16px}
+.container{width:90%;max-width:950px;margin:auto}
+.main-panel,.result-section,.history-section{position:relative;z-index:3;background:#FAF9F6;border-radius:28px;padding:40px;margin-bottom:35px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,.07);animation:fadeUp .8s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+.main-panel h2,.result-section h2,.history-section h2{font-family:"Playfair Display",serif;font-size:40px;margin-bottom:20px}
+.description{color:#777;line-height:1.8;margin-bottom:30px}
+.upload-area{display:block;background:#F4F3EF;padding:35px;border-radius:20px;cursor:pointer;transition:.3s}
+.upload-area:hover{transform:translateY(-4px)}
+.upload-area h3{font-size:20px;margin-bottom:8px}
+.upload-area p{color:#777;font-size:14px}
+.preview-container{margin-top:30px;display:flex;justify-content:center}
+.preview-container img{width:100%;height:450px;object-fit:cover;border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,.12)}
+.image-info{margin-top:25px;color:#555;font-size:14px;line-height:2}
+.image-info span{font-weight:600;color:#111}
+button{margin:30px auto 0;background:#111;color:white;border:0;border-radius:30px;padding:15px 35px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.3s}
+button:hover{transform:translateY(-4px)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:30px}
+.card{background:#F4F3EF;padding:28px;border-radius:22px;box-shadow:0 10px 25px rgba(0,0,0,.06);transition:.3s}
+.card:hover{transform:translateY(-5px)}
+.card h3{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:15px;font-family:"Courier New",monospace}
+.card p{font-size:22px;font-weight:600;line-height:1.5}
+.confidence-container{height:8px;background:#ddd;border-radius:10px;overflow:hidden;margin:15px 0}
+.confidence-bar{height:100%;width:0;background:#111;transition:.8s}
+.loading{margin-top:25px;color:#777}
+.spinner{width:35px;height:35px;border:3px solid #ddd;border-top-color:#111;border-radius:50%;margin:auto;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none}
+.history-card{display:flex;align-items:center;gap:20px;background:#F4F3EF;border-radius:20px;padding:20px;margin-bottom:15px;text-align:left}
+.history-image{width:110px;height:110px;border-radius:18px;object-fit:cover}
+.history-title{font-size:12px;color:#777;letter-spacing:1px;margin-bottom:10px}
+.history-details p{margin:5px 0}
+footer{text-align:center;padding:30px;color:#777;font-size:12px}
+@media(max-width:700px){.logo{font-size:38px}.main-panel,.result-section,.history-section{padding:25px}.main-panel h2,.result-section h2,.history-section h2{font-size:32px}.preview-container img{height:300px}.cards{grid-template-columns:1fr}.history-card{flex-direction:column;text-align:center}.history-image{width:180px;height:180px}.button{width:100%}}
