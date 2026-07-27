@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "../.venv"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../dataset_original"
+		},
+		{
+			"path": "../food_dataset"
+		},
+		{
+			"path": "../static"
+		},
+		{
+			"path": "../templates"
+		}
+	]
+}
