@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FreshCheck — Food Freshness Detector</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #2f9e6e, #3dbf87 60%, #2f9e6e);
+    min-height: 100vh;
+    color: #1f3a2e;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .corner-decor {
+    position: fixed; font-size: 60px; opacity: 0.5; pointer-events: none; z-index: 0;
+  }
+  .corner-decor.tl { top: -10px; left: 10px; }
+  .corner-decor.tr { top: -10px; right: 10px; transform: scaleX(-1); }
+
+.app-shell{
+    display:flex;
+    gap:25px;
+    padding:0 20px 20px;
+}
+  /* ---------- HERO HEADER ---------- */
+.hero-header{
+    width:98%;
+    height:120px;
+
+    margin:18px auto;
+
+    background:#278c60;
+    border-radius:20px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 45px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.hero-left,
+.hero-right{
+    width:180px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.hero-left img{
+    width:250px;
+    height:auto;
+    margin-top:-15px;   /* Move up */
+}
+.hero-right img{
+    width:250px;
+    height:auto;
+}
+
+.hero-center{
+    flex:1;
+    text-align:center;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.hero-center .logo-icon{
+    font-size:34px;
+    margin-bottom:2px;
+}
+
+.hero-center h1{
+    margin:0;
+    font-size:28px;
+    color:#fff;
+    font-weight:700;
+    line-height:1.2;
+}
+
+.hero-center p{
+    margin-top:4px;
+    font-size:14px;
+    color:#eafff2;
+    font-weight:400;
+}
+  .sidebar {
+    width: 260px;
+    align-self:flex-start;
+    background: linear-gradient(180deg, #1f6b48, #164e35);
+    color: #f2fff6;
+    padding:15px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-height:calc(100vh - 170px);
+    border-radius: 16px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+    border-radius: 12px; margin-bottom: 8px; font-size: 16px; cursor: pointer;
+    color: #d9f7e4; transition: background 0.15s ease;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.12); }
+  .nav-item.active { background: #ffd166; color: #4d3a06; font-weight: 700; }
+
+  .go-premium {
+    margin-top: 18px;
+    background: linear-gradient(135deg, #ffd166, #f4a71e);
+    border-radius: 14px;
+    padding: 14px;
+    color: #4a3a12;
+  }
+  .go-premium .crown { font-size: 18px; }
+  .go-premium h4 { font-size: 13px; margin: 4px 0 2px; }
+  .go-premium p { font-size: 11px; margin-bottom: 8px; opacity: 0.85; }
+  .go-premium button {
+    width: 100%; padding: 7px; border: none; border-radius: 8px;
+    background: #4a3a12; color: #fff8ec; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+
+.side-footer {
+    margin-top: 24px; text-align: center; padding-top: 16px;
+  }
+  .side-footer .basket { font-size: 64px; }
+  .side-footer p { font-size: 14px; color: #d9f7e4; margin-top: 10px; }
+
+  .main { flex: 1;  padding:0 32px 32px; }
+
+  .grid { display: flex; gap: 20px; align-items: stretch; }
+  .panel {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px;
+    flex: 1;
+    min-width: 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .panel h3 { font-size: 14px; color: #278c60; margin-bottom: 14px; }
+
+  .dropzone {
+    border: 2px dashed #8fd6b2; border-radius: 14px; padding: 28px 20px;
+    text-align: center; cursor: pointer; background: #eefdf4; transition: all 0.2s ease;
+  }
+  .dropzone:hover { background: #dff7e8; }
+  .dropzone.dragover { background: #cdf2dd; border-color: #278c60; }
+  .dropzone .cloud-icon { font-size: 32px; color: #278c60; }
+  .dropzone h4 { margin: 8px 0 4px; font-size: 15px; color: #1f3a2e; }
+  .dropzone p.sub { color: #5c7a6a; font-size: 12px; margin-bottom: 12px; }
+
+  .choose-btn {
+    background: #278c60; color: #fff; border: none; padding: 9px 20px;
+    border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .choose-btn:hover { background: #1f6b48; }
+  .dropzone .meta { font-size: 11px; color: #7d9c8c; margin-top: 10px; }
+
+  #fileInput { display: none; }
+  #previewWrap { display: none; position: relative; text-align: center; }
+  #preview { max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: cover; }
+  .remove-btn {
+    position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(0,0,0,0.55); color: #fff; border: none; cursor: pointer; font-size: 14px;
+  }
+  .file-name { font-size: 12px; color: #5c7a6a; margin-top: 8px; }
+
+  .action-row { display: flex; gap: 8px; margin-top: 14px; }
+  button#predictBtn {
+    flex: 1; padding: 12px; border: none; border-radius: 10px; background: #278c60;
+    color: white; font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  button#predictBtn:hover:not(:disabled) { background: #1f6b48; }
+  button#predictBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+  button#resetBtn {
+    display: none; padding: 12px 16px; border: 1px solid #8fd6b2; border-radius: 10px;
+    background: transparent; color: #278c60; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+
+  .spinner {
+    width: 14px; height: 14px; border: 2px solid #ffffff88; border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast-container { position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+  .toast {
+    background: #1f3a2e; color: #eafff2; padding: 12px 18px; border-radius: 10px; font-size: 13px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25); animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s; max-width: 280px;
+  }
+  .toast.error { background: #c0392b; }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes fadeOut { to { opacity: 0; transform: translateX(20px); } }
+
+  .supported-section { margin-top: 18px; }
+  .supported-section h5 { font-size: 11px; color: #7d9c8c; text-transform: uppercase; margin-bottom: 10px; }
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: #eefdf4; border: 1px solid #bfeacf; border-radius: 999px; padding: 6px 12px; font-size: 12px; color: #1f6b48; }
+
+  .empty-state { text-align: center; color: #7d9c8c; font-size: 13px; padding: 30px 10px 10px; }
+  .empty-state .big-icon { font-size: 52px; display: block; margin-bottom: 10px; }
+  .empty-state .sparkle { font-size: 12px; opacity: 0.6; }
+
+  .info-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .info-item { display: flex; align-items: flex-start; gap: 10px; }
+  .info-item .ico {
+    width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .info-item.acc .ico { background: #d7ecd2; }
+  .info-item.inst .ico { background: #fdf0c8; }
+  .info-item.health .ico { background: #fbe0de; }
+  .info-item h5 { font-size: 13px; margin-bottom: 2px; color: #1f3a2e; }
+  .info-item p { font-size: 11px; color: #7d9c8c; line-height: 1.4; }
+
+  .skeleton { display: none; }
+  .skel-row { background: linear-gradient(90deg, #eefdf4 25%, #dff7e8 50%, #eefdf4 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; margin-bottom: 12px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .skel-thumb { width: 60px; height: 60px; border-radius: 12px; }
+  .skel-line { height: 14px; }
+
+  .result-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .result-thumb { width: 58px; height: 58px; border-radius: 12px; object-fit: cover; border: 2px solid #bfeacf; }
+  .result-name { font-size: 16px; font-weight: 700; color: #278c60; }
+  .result-time { font-size: 10px; color: #9db8a9; margin-top: 2px; }
+
+  .freshness-badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+    border-radius: 999px; font-weight: 700; font-size: 12px; margin-top: 4px;
+  }
+  .freshness-badge.fresh { background: #d7f5e2; color: #1f8a4c; }
+  .freshness-badge.rotten { background: #fbe0de; color: #a13a2e; }
+
+  .stat-card { background: #eefdf4; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+  .stat-card .label { font-size: 11px; color: #5c7a6a; margin-bottom: 4px; }
+  .stat-card .value { font-size: 15px; font-weight: 700; color: #278c60; }
+
+  .shelf-box { display: flex; align-items: center; gap: 12px; background: #d7f5e2; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+  .shelf-box.rotten { background: #fbe0de; }
+  .shelf-box .days { font-size: 15px; font-weight: 700; color: #1f8a4c; }
+  .shelf-box .desc { font-size: 11px; color: #5c7a6a; }
+
+  .tip-box { display: flex; align-items: center; gap: 10px; background: #fff6da; border: 1px solid #ffd166; border-radius: 12px; padding: 12px 16px; font-size: 12px; }
+  .tip-box strong { color: #b3800a; }
+
+  .result-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .icon-btn {
+    flex: 1; padding: 9px; border-radius: 8px; border: 1px solid #8fd6b2; background: transparent;
+    color: #278c60; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .icon-btn:hover { background: #eefdf4; }
+
+  .recent-section { margin-top: 16px; }
+  .recent-section h4 { font-size: 11px; color: #7d9c8c; margin-bottom: 8px; text-transform: uppercase; }
+  .recent-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+  .recent-chip {
+    flex-shrink: 0; display: flex; align-items: center; gap: 6px; background: #eefdf4;
+    border-radius: 999px; padding: 6px 12px; font-size: 11px; cursor: pointer; white-space: nowrap;
+  }
+  .recent-chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .recent-chip .dot.fresh { background: #278c60; }
+  .recent-chip .dot.rotten { background: #a13a2e; }
+
+  .result { display: none; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Bottom feature strip */
+  .bottom-strip {
+    margin-top: 18px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .bottom-item { flex: 1; display: flex; align-items: center; gap: 10px; }
+  .bottom-item .ico {
+    width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .bottom-item.a .ico { background: #d7e3f0; }
+  .bottom-item.b .ico { background: #d7ecd2; }
+  .bottom-item.c .ico { background: #fbe0de; }
+  .bottom-item h5 { font-size: 13px; color: #1f3a2e; }
+  .bottom-item p { font-size: 11px; color: #7d9c8c; }
+
+  .banner {
+    margin-top: 16px; text-align: center; font-size: 13px; color: #fff;
+    font-weight: 600; background: rgba(255,255,255,0.16); border-radius: 12px; padding: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .grid { flex-direction: column; }
+    .bottom-strip { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+
+<div class="toast-container" id="toastContainer"></div>
+
+<header class="hero-header">
+
+    <div class="hero-left">
+        <img src="images/fruits-left.png" alt="Fruit Basket">
+    </div>
+
+    <div class="hero-center">
+
+        <div class="logo-icon">
+            🍏
+        </div>
+
+        <h1>FreshCheck</h1>
+
+        <p>AI-powered food freshness detection</p>
+
+    </div>
+
+    <div class="hero-right">
+        <img src="images/vegetables-right.png" alt="Vegetable Basket">
+    </div>
+
+</header>
+<div class="app-shell">
+  <div class="sidebar">
+    <div class="nav-item active" data-page="home">🏠 Home</div>
+    <div class="nav-item" data-page="history">🕒 History</div>
+    <div class="nav-item" data-page="home">📷 My Scans</div>
+    <div class="nav-item" data-page="guide">💡 Tips &amp; Guide</div>
+    <div class="nav-item" data-page="storage">📚 Food Library</div>
+    
+
+
+
+    <div class="side-footer">
+      <div class="basket">🥗</div>
+      <p>Eat fresh, stay healthy!</p>
+    </div>
+  </div>
+
+  <div class="main">
+    <div id="page-home">
+      <div class="grid">
+        <div class="panel">
+          <h3>📷 Upload Image</h3>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload food image">
+            <div id="dropzoneContent">
+              <div class="cloud-icon">⬆️</div>
+              <h4>Upload Food Image</h4>
+              <p class="sub">Drag &amp; drop an image here, or click to browse</p>
+              <button class="choose-btn" type="button" id="chooseBtn">Choose Image</button>
+              <p class="meta">Supported: JPG, PNG, JPEG • Max 5MB</p>
+            </div>
+            <div id="previewWrap">
+              <img id="preview" alt="Selected food image preview">
+              <button class="remove-btn" type="button" id="removeBtn" aria-label="Remove image">✕</button>
+            </div>
+          </div>
+          <div class="file-name" id="fileNameLabel"></div>
+          <input type="file" id="fileInput" accept="image/*">
+
+          <div class="action-row">
+            <button id="predictBtn" type="button" disabled>
+              <span id="btnText">Analyze Freshness</span>
+            </button>
+            <button id="resetBtn" type="button">Start Over</button>
+          </div>
+
+          <div class="supported-section">
+            <h5>What we can detect</h5>
+            <div class="chip-grid">
+              <div class="chip">🍎 Fresh Fruits</div>
+              <div class="chip">🥦 Fresh Vegetables</div>
+              <div class="chip">🍂 Rotten Fruits</div>
+              <div class="chip">🥀 Rotten Vegetables</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>🛡️ Detection Result</h3>
+
+          <div class="empty-state" id="emptyState">
+            <span class="big-icon">🥗</span>
+            Upload an image to see the freshness result here.
+            <div class="sparkle">✨ ✨ ✨</div>
+
+          
+          </div>
+
+          <div class="skeleton" id="skeleton">
+            <div class="result-top">
+              <div class="skel-row skel-thumb"></div>
+              <div style="flex:1;">
+                <div class="skel-row skel-line" style="width:60%;"></div>
+                <div class="skel-row skel-line" style="width:40%; height:20px;"></div>
+              </div>
+            </div>
+            <div class="skel-row" style="height:50px;"></div>
+            <div class="skel-row" style="height:50px;"></div>
+          </div>
+
+          <div class="result" id="resultBox">
+            <div class="result-top">
+              <img id="resultThumb" class="result-thumb" alt="Analyzed food">
+              <div>
+                <div class="result-name" id="itemName">—</div>
+                <span class="freshness-badge" id="freshBadge"></span>
+                <div class="result-time" id="resultTime"></div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="label">Category</div>
+              <div class="value" id="categoryValue">—</div>
+            </div>
+
+            <div class="shelf-box" id="shelfBox">
+              <div class="icon">📅</div>
+              <div>
+                <div class="days" id="shelfDays">—</div>
+                <div class="desc" id="shelfDesc">—</div>
+              </div>
+            </div>
+
+            <div class="tip-box">
+              <div>💡 <strong>Tip:</strong> <span id="tipText"></span></div>
+            </div>
+
+            <div class="result-actions">
+              <button class="icon-btn" type="button" id="copyBtn">📋 Copy Result</button>
+              <button class="icon-btn" type="button" id="newScanBtn">🔄 New Scan</button>
+            </div>
+
+            <div class="recent-section" id="recentSection" style="display:none;">
+              <h4>Recent Scans</h4>
+              <div class="recent-strip" id="recentStrip"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-strip">
+        <div class="bottom-item a">
+          <div class="ico">🎯</div>
+          <div><h5>Smart Detection</h5><p>Advanced AI to detect fresh or rotten food.</p></div>
+        </div>
+        <div class="bottom-item b">
+          <div class="ico">🌱</div>
+          <div><h5>Wide Food Support</h5><p>Works on a variety of fruits and vegetables.</p></div>
+        </div>
+        <div class="bottom-item c">
+          <div class="ico">🛡️</div>
+          <div><h5>Personalized Tips</h5><p>Get tips to store and consume food the right way.</p></div>
+        </div>
+      </div>
+
+      <div class="banner">❤️ Your health is our priority. Eat fresh, stay healthy!</div>
+    </div>
+
+    <div id="page-history" style="display:none;">
+  <div class="panel">
+    <h3>🕒 Scan History</h3>
+    <div id="historyList">
+      <div class="empty-state">No scan history yet. Try uploading an image from the Home tab.</div>
+    </div>
+  </div>
+</div>
+
+    <div id="page-guide" style="display:none;">
+      <div class="panel">
+        <h3 style="margin-bottom:12px;">General Freshness Signs</h3>
+        <p style="font-size:14px; line-height:1.8; color:#1f3a2e;">
+          🍅 <strong>Fruits:</strong> Look for firm texture, vibrant color, no visible mold or bruising.<br>
+          🥦 <strong>Vegetables:</strong> Should be crisp, not wilted, with no dark or slimy patches.<br>
+          👃 <strong>General rule:</strong> Trust your nose — an off smell is a reliable spoilage signal.
+        </p>
+      </div>
+    </div>
+
+    <div id="page-storage" style="display:none;">
+      <div class="panel">
+        <p style="font-size:14px; line-height:1.8; color:#1f3a2e;">
+          ❄️ Store fruits and vegetables separately — some fruits release ethylene gas that speeds up spoilage.<br>
+          🥶 Keep the fridge between 1–4°C for most produce.<br>
+          🧊 Leafy greens last longer wrapped in a slightly damp paper towel.
+        </p>
+      </div>
+    </div>
+
+    <div id="page-about" style="display:none;">
+      <div class="panel">
+        <p style="font-size:14px; line-height:1.8; color:#1f3a2e;">
+          FreshCheck uses a deep learning model (ResNet50) trained to classify food images as fresh or rotten,
+          helping reduce food waste and support smarter food storage decisions.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const navItemsList = document.querySelectorAll(".nav-item");
+  const pages = {
+    home: document.getElementById("page-home"),
+    history: document.getElementById("page-history"),
+    guide: document.getElementById("page-guide"),
+    storage: document.getElementById("page-storage"),
+    about: document.getElementById("page-about"),
+  };
+  navItemsList.forEach(function (item) {
+    item.addEventListener("click", function () {
+      navItemsList.forEach(function (i) { i.classList.remove("active"); });
+      item.classList.add("active");
+      const target = item.getAttribute("data-page");
+      Object.keys(pages).forEach(function (key) {
+        pages[key].style.display = (key === target) ? "block" : "none";
+      });
+    });
+  });
+
+  const dropzone = document.getElementById("dropzone");
+  const dropzoneContent = document.getElementById("dropzoneContent");
+  const previewWrap = document.getElementById("previewWrap");
+  const fileInput = document.getElementById("fileInput");
+  const preview = document.getElementById("preview");
+  const chooseBtn = document.getElementById("chooseBtn");
+  const removeBtn = document.getElementById("removeBtn");
+  const fileNameLabel = document.getElementById("fileNameLabel");
+  const predictBtn = document.getElementById("predictBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const btnText = document.getElementById("btnText");
+  const toastContainer = document.getElementById("toastContainer");
+
+  const emptyState = document.getElementById("emptyState");
+  const skeleton = document.getElementById("skeleton");
+  const resultBox = document.getElementById("resultBox");
+  const resultThumb = document.getElementById("resultThumb");
+  const itemName = document.getElementById("itemName");
+  const freshBadge = document.getElementById("freshBadge");
+  const resultTime = document.getElementById("resultTime");
+  const categoryValue = document.getElementById("categoryValue");
+  const shelfBox = document.getElementById("shelfBox");
+  const shelfDays = document.getElementById("shelfDays");
+  const shelfDesc = document.getElementById("shelfDesc");
+  const tipText = document.getElementById("tipText");
+  const copyBtn = document.getElementById("copyBtn");
+  const newScanBtn = document.getElementById("newScanBtn");
+
+  const recentSection = document.getElementById("recentSection");
+  const recentStrip = document.getElementById("recentStrip");
+  let recentScans = [];
+  let lastResultData = null;
+  const MAX_SIZE = 5 * 1024 * 1024;
+
+  function showToast(message, type) {
+    const toast = document.createElement("div");
+    toast.className = "toast" + (type === "error" ? " error" : "");
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(function () { toast.remove(); }, 3000);
+  }
+
+  chooseBtn.addEventListener("click", function (e) { e.stopPropagation(); fileInput.click(); });
+  dropzone.addEventListener("click", function () { fileInput.click(); });
+  dropzone.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
+  });
+  dropzone.addEventListener("dragover", function (e) { e.preventDefault(); dropzone.classList.add("dragover"); });
+  dropzone.addEventListener("dragleave", function () { dropzone.classList.remove("dragover"); });
+  dropzone.addEventListener("drop", function (e) {
+    e.preventDefault();
+    dropzone.classList.remove("dragover");
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener("change", function () {
+    if (fileInput.files.length) handleFile(fileInput.files[0]);
+  });
+
+  function handleFile(file) {
+    if (!file.type.startsWith("image/")) { showToast("Please upload a valid image file.", "error"); return; }
+    if (file.size > MAX_SIZE) { showToast("File too large — max size is 5MB.", "error"); return; }
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+    preview.src = URL.createObjectURL(file);
+    dropzoneContent.style.display = "none";
+    previewWrap.style.display = "block";
+    fileNameLabel.textContent = file.name;
+    predictBtn.disabled = false;
+    showToast("Image ready to analyze.");
+  }
+
+  removeBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    fileInput.value = "";
+    dropzoneContent.style.display = "block";
+    previewWrap.style.display = "none";
+    fileNameLabel.textContent = "";
+    predictBtn.disabled = true;
+  });
+
+  predictBtn.addEventListener("click", async function () {
+    const file = fileInput.files[0];
+    if (!file) { showToast("Please choose an image first.", "error"); return; }
+
+    predictBtn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> Analyzing...';
+    emptyState.style.display = "none";
+    resultBox.style.display = "none";
+    skeleton.style.display = "block";
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/predict", { method: "POST", body: formData });
+      if (!response.ok) throw new Error("Server error: " + response.status);
+      const data = await response.json();
+
+      const isFresh = data.prediction.toLowerCase().includes("fresh");
+      const isFruit = data.prediction.toLowerCase().includes("fruit");
+      const label = data.prediction.replaceAll("_", " ");
+      const emoji = isFruit ? "🍎" : "🥦";
+
+      skeleton.style.display = "none";
+      resultBox.style.display = "block";
+      resetBtn.style.display = "inline-block";
+
+      resultThumb.src = preview.src;
+      itemName.textContent = emoji + " " + label;
+      freshBadge.className = "freshness-badge " + (isFresh ? "fresh" : "rotten");
+      freshBadge.innerHTML = (isFresh ? "✔ Fresh" : "⚠ Rotten");
+      resultTime.textContent = "Analyzed at " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      categoryValue.textContent = isFruit ? "Fruit" : "Vegetable";
+      shelfBox.className = "shelf-box " + (isFresh ? "" : "rotten");
+      shelfDays.textContent = isFresh ? data.shelf_life : "Expired";
+      shelfDesc.textContent = isFresh
+        ? "Best consumed within this period for optimal taste and nutrition."
+        : "This item should be discarded — not safe to consume.";
+      tipText.textContent = isFresh
+        ? "Store in a refrigerator to extend freshness."
+        : "Dispose of spoiled food properly to avoid contamination.";
+
+      lastResultData = { label: label, isFresh: isFresh, shelfLife: shelfDays.textContent, image: preview.src };
+      recentScans.unshift(lastResultData);
+      if (recentScans.length > 6) recentScans.pop();
+      renderRecent();
+      showToast("Analysis complete.");
+
+    } catch (err) {
+      skeleton.style.display = "none";
+      emptyState.style.display = "block";
+      showToast("Couldn't reach the server. Is app.py running?", "error");
+      console.error(err);
+    } finally {
+      predictBtn.disabled = false;
+      btnText.textContent = "Analyze Freshness";
+    }
+  });
+
+  resetBtn.addEventListener("click", resetAll);
+  newScanBtn.addEventListener("click", resetAll);
+
+  function resetAll() {
+    fileInput.value = "";
+    dropzoneContent.style.display = "block";
+    previewWrap.style.display = "none";
+    fileNameLabel.textContent = "";
+    predictBtn.disabled = true;
+    resultBox.style.display = "none";
+    resetBtn.style.display = "none";
+    emptyState.style.display = "block";
+  }
+
+  copyBtn.addEventListener("click", function () {
+    if (!lastResultData) return;
+    const text = lastResultData.label + " — " + (lastResultData.isFresh ? "Fresh" : "Rotten") + " — Shelf life: " + lastResultData.shelfLife;
+    navigator.clipboard.writeText(text).then(function () {
+      showToast("Result copied to clipboard.");
+    }).catch(function () {
+      showToast("Couldn't copy — try manually.", "error");
+    });
+  });
+
+  
+    function renderRecent() {
+    recentSection.style.display = "block";
+    recentStrip.innerHTML = recentScans.map(function (scan, i) {
+      return '<div class="recent-chip" data-index="' + i + '"><span class="dot ' +
+        (scan.isFresh ? 'fresh' : 'rotten') + '"></span>' + scan.label + '</div>';
+    }).join("");
+    document.querySelectorAll(".recent-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        const scan = recentScans[chip.getAttribute("data-index")];
+        showToast(scan.label + ": " + (scan.isFresh ? "Fresh" : "Rotten") + " — " + scan.shelfLife);
+      });
+    });
+
+    // Also update the History page
+    const historyList = document.getElementById("historyList");
+    if (recentScans.length === 0) {
+      historyList.innerHTML = '<div class="empty-state">No scan history yet. Try uploading an image from the Home tab.</div>';
+    } else {
+      historyList.innerHTML = recentScans.map(function (scan) {
+        return '<div class="stat-card" style="display:flex; justify-content:space-between; align-items:center; gap:12px;">' +
+          '<img src="' + scan.image + '" style="width:48px; height:48px; border-radius:10px; object-fit:cover; flex-shrink:0;">' +
+          '<div style="flex:1;"><strong style="color:#1f3a2e;">' + scan.label + '</strong><br>' +
+          '<span style="font-size:12px; color:#7d9c8c;">Shelf life: ' + scan.shelfLife + '</span></div>' +
+          '<span class="freshness-badge ' + (scan.isFresh ? 'fresh' : 'rotten') + '">' +
+          (scan.isFresh ? '✔ Fresh' : '⚠ Rotten') + '</span>' +
+          '</div>';
+      }).join("");
+    }
+  }
+});
+</script>
+</body>
+</html>
