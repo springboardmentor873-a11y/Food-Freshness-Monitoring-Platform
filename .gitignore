@@ -1,0 +1,14 @@
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+.env
+food_freshness.db
+uploads/
+exports/
+model/
+data/
+Freshness44/
+*.keras
+*.h5
+*.db
