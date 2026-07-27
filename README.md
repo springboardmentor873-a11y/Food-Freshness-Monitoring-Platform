@@ -1,75 +1,188 @@
-# React + TypeScript + Vite
+# FreshTrack - AI Powered Food Freshness Monitoring Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FreshTrack is an AI-powered food freshness monitoring platform that helps identify whether a fruit is **Fresh** or **Rotten** using deep learning. The platform provides an intuitive web interface where users can upload an image and receive an instant prediction with confidence score and freshness analysis.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Features
 
-## React Compiler
+- AI-based Fresh/Rotten Fruit Detection
+- Image Upload and Preview
+- Real-time Prediction
+- Freshness Score
+- Confidence Score
+- Shelf Life Estimation
+- Spoilage Probability
+- Modern Responsive UI
+- FastAPI Backend
+- TensorFlow Deep Learning Model
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Frontend
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- TanStack Router
+- Lucide Icons
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Backend
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- FastAPI
+- Python
+- TensorFlow
+- OpenCV
+- Pillow
+- NumPy
 
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📂 Project Structure
 
 ```
+FreshTrack
+│
+├── backend
+│   ├── app.py
+│   ├── predict.py
+│   └── requirements.txt
+│
+├── src
+│   ├── components
+│   ├── routes
+│   ├── assets
+│   └── styles
+│
+├── public
+├── package.json
+└── README.md
+```
+
+---
+
+## ⚙️ Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/springboardmentor873-a11y/Food-Freshness-Monitoring-Platform.git
+
+cd Food-Freshness-Monitoring-Platform
+```
+
+Switch to the project branch:
+
+```bash
+git checkout harshit-hoonka
+```
+
+---
+
+## 💻 Frontend Setup
+
+Navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+Install the required dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Frontend will be available at:
+
+```
+http://localhost:8080
+```
+
+---
+
+## 🖥️ Backend Setup
+
+Navigate to the backend directory:
+
+```bash
+cd backend
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate the virtual environment:
+
+**Windows:**
+
+```bash
+venv\Scripts\activate
+```
+
+**Linux/Mac:**
+
+```bash
+source venv/bin/activate
+```
+
+Install backend dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the backend server:
+
+```bash
+uvicorn app:app --reload
+```
+
+Backend API will be available at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 🔗 API Documentation
+
+The backend API can be accessed at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 🤖 AI Model
+
+The deep learning model classifies fruit images into:
+
+- Fresh
+- Rotten
+
+The backend returns:
+
+- Fruit Name
+- Freshness Status
+- Confidence Score
+
+---
+
+## 📄 License
+
+This project is developed for educational and internship purposes.
