@@ -1,0 +1,222 @@
+/* Hero Entrance Animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatAnim {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-18px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes floatAnimReverse {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(18px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Base Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #eff6ff 100%);
+  position: relative;
+  overflow: hidden;
+  min-height:75vh;
+  padding:70px 0;
+}
+
+/* Glassmorphism Elements */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+}
+
+.floating-card-1 {
+  position: absolute;
+  top: 10%;
+  left: -10%;
+  animation: floatAnim 6s ease-in-out infinite;
+  z-index: 3;
+}
+
+.floating-card-2 {
+  position: absolute;
+  bottom: 10%;
+  right: -8%;
+  animation: floatAnimReverse 7s ease-in-out infinite;
+  z-index: 3;
+}
+
+/* Typography & Badges */
+.hero-title {
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.15;
+  color: #111827;
+}
+
+.hero-subtitle {
+  color: #4b5563;
+  line-height: 1.7;
+  font-size: 1.15rem;
+  max-width: 95%;
+}
+
+.badge-ai {
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+  color: white;
+  border-radius: 50rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+}
+
+/* Modern Buttons */
+.btn-primary-custom {
+  background-color: #10b981;
+  border: none;
+  color: white;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  animation: pulseGlow 2.5s infinite;
+}
+
+.btn-primary-custom:hover {
+  background-color: #059669;
+  transform: translateY(-3px);
+  color: white;
+}
+
+.btn-outline-custom {
+  background-color: white;
+  border: 2px solid #e5e7eb;
+  color: #374151;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-custom:hover {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+  transform: translateY(-3px);
+}
+
+/* Feature Highlights */
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 2.5rem;
+}
+
+.feature-list li {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.feature-icon-wrapper {
+  background-color: #ecfdf5;
+  color: #10b981;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+/* Right Side Image wrapper */
+.hero-image-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.main-hero-img { 
+    width:100%;
+    height:560px;
+    object-fit:cover;
+    border-radius:28px;
+    box-shadow:0 25px 60px rgba(0,0,0,.15);
+}
+
+/* Stats Section below Hero */
+.stats-container {
+  position: relative;
+  z-index: 5;
+}
+
+.stat-card {
+  padding: 2rem;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 2.2rem;
+  color: #3b82f6;
+}
+
+.stat-title {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.stat-desc {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Delayed Animation Classes */
+.animate-delay-1 { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+.animate-delay-2 { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
+.animate-delay-3 { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+.animate-delay-4 { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both; }
+
+/* Responsive Tweaks */
+@media (max-width: 991px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  .hero-section {
+    padding-top: 3rem;
+  }
+}

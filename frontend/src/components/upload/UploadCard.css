@@ -1,0 +1,180 @@
+.upload-section{
+    padding:90px 0;
+    background:#f8fafc;
+}
+
+.upload-card{
+    max-width:850px;
+    margin:auto;
+    padding:50px;
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 20px 45px rgba(0,0,0,.08);
+}
+
+.upload-card h2{
+    text-align:center;
+    font-weight:700;
+}
+
+.upload-subtitle{
+    text-align:center;
+    color:#6b7280;
+    margin:15px 0 40px;
+}
+
+.drop-zone{
+    border:2px dashed #d4d4d4;
+    border-radius:20px;
+    padding:60px 25px;
+    text-align:center;
+    transition:.35s;
+    cursor:pointer;
+}
+
+.drop-zone:hover,
+.drop-zone.active{
+    border-color:#22c55e;
+    background:#f5fff7;
+    transform:translateY(-4px);
+}
+
+.upload-icon{
+    font-size:75px;
+    color:#22c55e;
+    margin-bottom:20px;
+}
+
+.browse-btn{
+    margin:20px 0;
+    background:#16a34a;
+    color:white;
+    border:none;
+    padding:13px 28px;
+    border-radius:12px;
+    font-weight:600;
+}
+
+.browse-btn:hover{
+    background:#15803d;
+}
+
+.upload-info{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin:25px 0 10px;
+    flex-wrap:wrap;
+}
+
+.upload-info span{
+    background:#eef2ff;
+    color:#374151;
+    padding:8px 14px;
+    border-radius:25px;
+    font-size:.85rem;
+}
+
+.preview-card{
+    text-align:center;
+}
+
+.preview-card img{
+    width:320px;
+    max-width:100%;
+    border-radius:18px;
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+
+.image-details{
+    margin-top:25px;
+}
+
+.image-details h5{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    align-items:center;
+}
+
+.ready{
+    margin-top:15px;
+    color:#16a34a;
+    font-weight:600;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+}
+
+.button-group{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:35px;
+    flex-wrap:wrap;
+}
+
+.remove-btn,
+.analyze-btn{
+
+    border:none;
+    padding:13px 28px;
+    border-radius:12px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:.3s;
+}
+
+.remove-btn{
+
+    background:#ef4444;
+    color:white;
+}
+
+.analyze-btn{
+
+    background:#16a34a;
+    color:white;
+}
+
+.remove-btn:hover{
+
+    background:#dc2626;
+}
+
+.analyze-btn:hover{
+
+    background:#15803d;
+}
+
+.analyze-btn:disabled{
+
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+@media(max-width:768px){
+
+.upload-card{
+
+padding:30px;
+}
+
+.button-group{
+
+flex-direction:column;
+}
+
+.upload-info{
+
+gap:8px;
+}
+
+.preview-card img{
+
+width:100%;
+}
+
+}
