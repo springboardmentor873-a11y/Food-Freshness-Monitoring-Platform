@@ -1,72 +1,170 @@
-# FreshEye AI — Food Freshness Monitoring Platform (Frontend)
+# FreshEye AI - Frontend
 
-A complete, frontend-only React dashboard for an AI-powered food freshness monitoring platform. Developed as part of an internship project at Infosys — premium glassmorphism UI, full navigation, realistic mock data, and every module wired up and working.
+This repository contains the frontend of the **FreshEye AI** food freshness monitoring platform. It was developed as part of an internship project at Infosys using **React** and **Vite**. The application provides a modern dashboard for monitoring food freshness, managing inventory, visualizing analytics, and simulating AI-based freshness assessment using mock data.
 
-> **Scope note:** This repository is the **frontend only**, as requested. There is no backend, no FastAPI server, and no TensorFlow/Keras training code included. `services/api.js` is a placeholder service layer that simulates real network calls (with latency) and returns realistic, computed data — ready to be swapped for real endpoints later. The "AI model" referenced throughout the UI (EfficientNetB0) is described in copy and used as the conceptual basis for the deterministic image-analysis logic in `src/data/mockData.js`, but no model actually runs in this repo.
+> **Note:** This repository contains only the frontend application. Backend services, APIs, authentication servers, and machine learning model training are not included. The application uses mock data and simulated API responses to demonstrate functionality and can be connected to a real backend in the future.
+
+---
 
 ## Tech Stack
 
-- React 18 + Vite
-- Tailwind CSS (custom emerald/graphite glassmorphism design system)
-- React Router DOM
-- Framer Motion
-- Lucide React (icons)
-- Recharts (bar / line / pie / area charts)
-- React Hook Form
-- React Hot Toast
+* React 18
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Framer Motion
+* Lucide React
+* Recharts
+* React Hook Form
+* React Hot Toast
+
+---
 
 ## Getting Started
 
+### Install dependencies
+
 ```bash
 npm install
+```
+
+### Start the development server
+
+```bash
 npm run dev
 ```
 
-Then open the printed local URL (usually `http://localhost:5173`).
+Open the local URL displayed in the terminal (typically `http://localhost:5173`).
 
-To build for production:
+### Build for production
 
 ```bash
 npm run build
+```
+
+### Preview the production build
+
+```bash
 npm run preview
 ```
 
-## Logging In
+---
 
-This is a frontend-only auth system (JWT-style token stored in `localStorage`, no real server). You can:
+## Authentication
 
-- **Sign up** as any role (Consumer, Retail Manager, Warehouse Operator, Food Quality Inspector, Administrator) from `/signup` or `/role-selection`.
-- **Log in** with any email/password you've signed up with.
-- **Admin demo shortcut:** log in with the email `admin@fresheye.ai` (any password) to land as an Administrator and unlock **User Management**.
+Authentication is simulated using **localStorage** since this project does not include a backend server.
 
-## Folder Structure
+You can:
+
+* Sign up as one of the available roles:
+
+  * Consumer
+  * Retail Manager
+  * Warehouse Operator
+  * Food Quality Inspector
+  * Administrator
+* Log in using any registered email and password.
+* Use the demo administrator account:
+
+  * **Email:** `admin@fresheye.ai`
+  * **Password:** Any password
+
+The administrator account provides access to the **User Management** module.
+
+---
+
+## Project Structure
 
 ```
 src/
-  assets/        static assets
-  components/    common/ — shared UI building blocks (Navbar, Sidebar, cards, modal, etc.)
-  layouts/        DashboardLayout, AuthLayout
-  pages/          one file per route/module (Dashboard, Inventory, Image Analysis, ...)
-  services/       api.js — placeholder async "API" functions
-  routes/         AppRoutes.jsx, ProtectedRoute.jsx
-  context/        AuthContext, ThemeContext, NotificationContext
-  hooks/          useAuth, useTheme, useNotifications, useInventory
-  utils/          helpers.js, assessmentStore.js
-  data/           mockData.js — realistic food/inventory/analytics data generation
-  styles/         (reserved for additional global styles)
+│
+├── assets/          Static assets
+├── components/      Reusable UI components
+├── layouts/         Application layouts
+├── pages/           Application pages
+├── services/        Simulated API layer
+├── routes/          Route configuration
+├── context/         React Context providers
+├── hooks/           Custom React hooks
+├── utils/           Helper functions
+├── data/            Mock data generation
+└── styles/          Global styles
 ```
 
-## Modules Implemented
+---
 
-Landing page · Login/Signup (with role selection) · Dashboard · Food Inventory (search/filter/pagination/add/edit/delete) · Image Analysis (drag-drop/camera/browse, simulated 3s analysis) · Freshness Assessment (score, confidence, color/texture analysis) · Shelf-Life Prediction · Storage Monitoring · Recommendations · Analytics (executive charts) · Reports (with PDF/Excel/Print export triggers) · Notifications (persistent read-state) · Settings (dark/light mode, notification preferences, language) · About Project · Profile · User Management (Administrator only, with user deletion) · 404 page.
+## Features
 
-## Notes for Presentation
+* Landing Page
+* User Authentication (Login & Signup)
+* Role Selection
+* Dashboard
+* Food Inventory Management
 
-- All inventory, notifications, analytics and report data is generated deterministically from a seeded PRNG in `src/data/mockData.js`, so numbers stay realistic and consistent within a session rather than showing Lorem Ipsum or static placeholders.
-- Notification read-state persists in `localStorage`, so previously-read alerts stay marked as read even after signing out and back in.
-- Dark/light theme also persists across sessions.
-- To connect a real backend later, replace the function bodies inside `src/services/api.js` with real `fetch`/`axios` calls — every page already consumes this service layer, so no page code needs to change.
+  * Search
+  * Filter
+  * Pagination
+  * Add, Edit, and Delete Items
+* Image Analysis
 
-## Version
+  * Drag & Drop Upload
+  * Camera Upload
+  * File Browser Upload
+* Freshness Assessment
+* Shelf-Life Prediction
+* Storage Monitoring
+* Food Recommendations
+* Analytics Dashboard
+* Reports
+* Notifications
+* User Profile
+* Settings
 
-1.0.0
+  * Light/Dark Theme
+  * Language Preferences
+  * Notification Preferences
+* About Project
+* User Management (Administrator)
+* Custom 404 Page
+
+---
+
+## Project Notes
+
+* Mock inventory, analytics, and report data are generated programmatically to provide consistent demonstration data.
+* Notification status is stored in **localStorage** and remains available across browser sessions.
+* Theme preferences are also stored in **localStorage**.
+* The simulated API layer is located in `src/services/api.js`, making it easier to integrate a real backend in the future without modifying the UI components.
+
+---
+
+## Future Enhancements
+
+Some planned improvements include:
+
+* Integrate a FastAPI backend
+* Connect a trained deep learning model for food freshness prediction
+* Store application data in a database
+* Add real-time inventory updates
+* Implement role-based authentication using JWT
+* Deploy the application using Docker and cloud services
+
+---
+
+## Screenshots
+
+Screenshots of the application can be added here:
+
+* Landing Page
+* Dashboard
+* Inventory Management
+* Image Analysis
+* Analytics
+* Reports
+* Settings
+
+---
+
+## License
+
+This project was developed for Infosys Internship purpose by Mohammed Ali.
