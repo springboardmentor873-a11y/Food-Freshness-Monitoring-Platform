@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prediction Result</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<nav>
+<div class="logo">🌿 FreshAI</div>
+
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/upload">Upload</a></li>
+<li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+
+<div class="result-box">
+
+<h1>Prediction Result</h1>
+
+<br>
+
+<img src="{{ image_path }}" width="300">
+
+<br><br>
+
+<h2 class="result">
+Prediction : {{ prediction }}
+</h2>
+
+<br>
+
+<h3 class="confidence">
+Confidence : {{ confidence }}%
+</h3>
+
+<br>
+
+<div class="shelf">
+
+<h2>Estimated Shelf Life</h2>
+
+<h3>{{ shelf_life }}</h3>
+
+</div>
+
+<br>
+
+<div class="shelf">
+
+<h2>Storage Recommendation</h2>
+
+<h3>{{ storage }}</h3>
+
+</div>
+
+<br>
+
+<a href="/upload" class="btn">
+Analyze Another Image
+</a>
+
+</div>
+
+</body>
+</html>

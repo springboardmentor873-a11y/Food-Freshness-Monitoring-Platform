@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Upload Image</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">
+🌿 FreshAI
+</div>
+
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/upload">Upload</a></li>
+<li><a href="/history">History</a></li>
+<li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+
+<div class="upload-box">
+
+<h1>Upload Food Image</h1>
+
+<br>
+
+<p>
+
+Upload an image of a fruit or vegetable to check its freshness.
+
+</p>
+
+<br><br>
+
+<form action="/predict" method="POST" enctype="multipart/form-data">
+
+<input
+type="file"
+name="image"
+accept=".jpg,.jpeg,.png"
+required>
+
+<br><br>
+
+<button type="submit">
+
+<i class="fa-solid fa-upload"></i>
+
+Analyze Image
+
+</button>
+
+</form>
+
+<br>
+
+<h3>Supported Formats</h3>
+
+<p>
+
+JPG • JPEG • PNG
+
+</p>
+
+</div>
+
+</body>
+</html>
