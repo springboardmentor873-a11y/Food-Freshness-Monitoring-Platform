@@ -1,0 +1,12 @@
+streamlit
+tensorflow==2.21.0
+numpy
+pandas
+matplotlib
+scikit-learn
+opencv-python-headless
+Pillow
+rich
+markdown-it-py
+mdurl
+bcrypt
