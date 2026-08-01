@@ -218,7 +218,13 @@ export const predictFreshness = async (fileOrUrl: string | File, selectedCategor
     formData.append("file", fileOrUrl);
     
     try {
-      const response = await fetch("http://localhost:8000/predict", {
+      let backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      // Format with https:// if a raw hostname is injected via Render blueprints
+      if (backendUrl && !backendUrl.startsWith("http://") && !backendUrl.startsWith("https://")) {
+        backendUrl = `https://${backendUrl}`;
+      }
+      
+      const response = await fetch(`${backendUrl}/predict`, {
         method: "POST",
         body: formData,
       });

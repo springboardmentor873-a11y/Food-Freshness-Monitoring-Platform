@@ -1,0 +1,27 @@
+services:
+  # 1. Python FastAPI Backend Service
+  - type: web
+    name: food-freshness-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
+      - key: FRONTEND_URL
+        value: "*" # Set this to your frontend URL after deployment to restrict CORS access
+
+  # 2. Next.js Frontend Web Service
+  - type: web
+    name: food-freshness-frontend
+    env: node
+    rootDir: .
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: food-freshness-backend
+          property: host

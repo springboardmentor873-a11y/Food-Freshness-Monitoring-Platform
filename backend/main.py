@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import os
 from io import BytesIO
 from PIL import Image
 
@@ -9,10 +10,16 @@ from predict import make_prediction
 
 app = FastAPI(title="Food Freshness API", version="1.0.0")
 
-# Setup CORS to allow requests from the Next.js frontend
+# Setup CORS dynamically to allow requests from the Next.js frontend
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+if frontend_url == "*":
+    allow_origins = ["*"]
+else:
+    allow_origins = [origin.strip() for origin in frontend_url.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=allow_origins, 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
