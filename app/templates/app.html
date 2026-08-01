@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Freshness Monitoring Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .container { max-width: 1000px; margin: auto; }
+    h1 { color: #2f4f4f; }
+    button, input, select, textarea { font-size: 15px; padding: 10px; margin: 6px 0; }
+    button { cursor: pointer; }
+    .card { border: 1px solid #ccc; border-radius: 10px; padding: 20px; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    .result { background: #f7f7f7; padding: 10px; margin-top: 10px; }
+    .message { background: #eef; padding: 12px; border-radius: 8px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Food Freshness Monitoring Platform</h1>
+    <div class="card">
+      <h2>Home</h2>
+      <p>Upload a food image to assess freshness, predict shelf life, or manage inventory.</p>
+    </div>
+    <div class="card">
+      <h2>Upload a Food Image</h2>
+      <input type="file" id="imageInput" accept="image/*" />
+      <button onclick="assessImage()">Assess Freshness</button>
+      <div id="imageResult" class="result"></div>
+    </div>
+    <div class="card">
+      <h2>Predict Shelf Life</h2>
+      <label>Product Type</label><br>
+      <input id="productType" placeholder="apple" /><br>
+      <label>Category</label><br>
+      <select id="category">
+        <option value="fruit">fruit</option>
+        <option value="vegetable">vegetable</option>
+        <option value="dairy">dairy</option>
+        <option value="meat">meat</option>
+        <option value="other">other</option>
+      </select><br>
+      <label>Temperature (°C)</label><br>
+      <input id="temperature" type="number" value="8" /><br>
+      <label>Humidity (%)</label><br>
+      <input id="humidity" type="number" value="55" /><br>
+      <label>Age (days)</label><br>
+      <input id="ageDays" type="number" value="3" /><br>
+      <button onclick="predictShelfLife()">Predict Shelf Life</button>
+      <div id="predictResult" class="result"></div>
+    </div>
+    <div class="card">
+      <h2>Admin</h2>
+      <p><a href="/dashboard.html">Open management dashboard</a></p>
+    </div>
+  </div>
+  <script>
+    async function assessImage() {
+      const input = document.getElementById('imageInput');
+      const result = document.getElementById('imageResult');
+      if (!input.files.length) {
+        result.textContent = 'Please choose an image file.';
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', input.files[0]);
+      const res = await fetch('/api/assess/', { method: 'POST', body: formData });
+      const data = await res.json();
+      result.innerHTML = `<strong>Freshness:</strong> ${data.freshness_label} (${(data.freshness_score*100).toFixed(1)}%)<br/><strong>Spoilage probability:</strong> ${(data.spoilage_probability*100).toFixed(1)}%`;
+    }
+    async function predictShelfLife() {
+      const result = document.getElementById('predictResult');
+      const payload = {
+        product_type: document.getElementById('productType').value,
+        category: document.getElementById('category').value,
+        temperature: Number(document.getElementById('temperature').value),
+        humidity: Number(document.getElementById('humidity').value),
+        age_days: Number(document.getElementById('ageDays').value),
+      };
+      const res = await fetch('/api/predict/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      result.innerHTML = `<strong>Estimated shelf life:</strong> ${data.estimated_shelf_life_days} days<br/><strong>Confidence:</strong> ${data.confidence}`;
+    }
+  </script>
+</body>
+</html>

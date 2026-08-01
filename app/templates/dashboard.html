@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Food Freshness Monitoring</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f4f6fb; }
+    .container { max-width: 1100px; margin: auto; }
+    button, input, select, textarea { font-size: 15px; padding: 10px; margin: 6px 0; }
+    button { cursor: pointer; border: none; background: #2f6cd1; color: white; border-radius: 6px; }
+    button:hover { opacity: 0.92; }
+    .card { background: white; border: 1px solid #d6dce5; border-radius: 12px; padding: 22px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; border: 1px solid #e2e8f0; text-align: left; }
+    th { background: #eef2ff; }
+    .message { background: #eef2ff; padding: 12px; border-radius: 8px; margin-top: 12px; }
+    .alert { padding: 12px; border-radius: 8px; margin-top: 10px; }
+    .alert.info { background: #dbeafe; color: #1e3a8a; }
+    .alert.warning { background: #fef3c7; color: #92400e; }
+    .alert.critical { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Food Freshness Monitoring Dashboard</h1>
+    <div class="grid">
+      <div class="card">
+        <h2>Login</h2>
+        <label>Username</label><br>
+        <input id="username" value="manager1" />
+        <label>Password</label><br>
+        <input id="password" type="password" value="password2" />
+        <button onclick="login()">Sign In</button>
+        <div id="loginMessage" class="message"></div>
+      </div>
+      <div class="card">
+        <h2>Dashboard Snapshot</h2>
+        <div id="userSummary">Log in to view summary and alerts.</div>
+      </div>
+    </div>
+
+    <div id="protectedArea" style="display:none;">
+      <div class="grid">
+        <div class="card">
+          <h2>Inventory Summary</h2>
+          <p><strong>Total items:</strong> <span id="totalItems"></span></p>
+          <p><strong>Fresh items:</strong> <span id="freshItems"></span></p>
+          <p><strong>Spoiled items:</strong> <span id="spoiledItems"></span></p>
+          <p><strong>Dataset present:</strong> <span id="datasetPresent"></span></p>
+          <p><strong>Image dataset present:</strong> <span id="imageDatasetPresent"></span></p>
+          <p><strong>Image model present:</strong> <span id="imageModelPresent"></span></p>
+        </div>
+        <div class="card">
+          <h2>Storage Snapshot</h2>
+          <table>
+            <thead><tr><th>Location</th><th>Temp (°C)</th><th>Humidity (%)</th><th>Timestamp</th></tr></thead>
+            <tbody id="storageTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Alerts</h2>
+        <div id="alerts"></div>
+      </div>
+
+      <div class="card">
+        <h2>Inventory Management</h2>
+        <button onclick="refreshInventory()">Refresh Inventory</button>
+        <button onclick="showNewItemForm()">Add New Item</button>
+        <div id="inventoryResult" class="message"></div>
+        <table id="inventoryTable"></table>
+      </div>
+
+      <div class="card">
+        <h2>Inventory Form</h2>
+        <div id="inventoryForm"></div>
+      </div>
+
+      <div class="card">
+        <h2>Dataset Management</h2>
+        <div>
+          <strong>Structured dataset</strong><br>
+          <label>Upload structured shelf-life dataset (CSV)</label><br>
+          <input type="file" id="datasetFile" accept=".csv" /><br>
+          <button onclick="uploadDataset()">Upload Dataset</button>
+          <button onclick="trainShelfLifeModel()">Train Shelf-Life Model</button>
+        </div>
+        <div style="margin-top:20px;">
+          <strong>Image dataset</strong><br>
+          <button onclick="trainImageModel()">Train Image Freshness Model</button>
+          <button onclick="refreshImageDatasetStatus()">Refresh Image Dataset Status</button>
+          <div id="imageDatasetStatus" class="message"></div>
+        </div>
+        <div id="datasetStatus" class="message"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let accessToken = '';
+    let editingItemId = null;
+
+    function setMessage(elementId, text, isError = false) {
+      const el = document.getElementById(elementId);
+      el.textContent = text;
+      el.style.color = isError ? '#900' : '#040';
+    }
+
+    async function login() {
+      setMessage('loginMessage', 'Logging in...');
+      const form = new URLSearchParams();
+      form.append('username', document.getElementById('username').value);
+      form.append('password', document.getElementById('password').value);
+      const res = await fetch('/api/login', { method: 'POST', body: form });
+      if (!res.ok) {
+        setMessage('loginMessage', 'Login failed', true);
+        return;
+      }
+      const data = await res.json();
+      accessToken = data.access_token;
+      setMessage('loginMessage', 'Login succeeded');
+      document.getElementById('protectedArea').style.display = 'block';
+      refreshDashboard();
+      refreshInventory();
+      refreshDatasetStatus();
+    }
+
+    async function fetchWithAuth(path, opts = {}) {
+      opts.headers = opts.headers || {};
+      opts.headers.Authorization = `Bearer ${accessToken}`;
+      return fetch(path, opts);
+    }
+
+    async function refreshDashboard() {
+      const res = await fetchWithAuth('/api/dashboard/summary');
+      if (!res.ok) {
+        setMessage('loginMessage', 'Failed to load dashboard', true);
+        return;
+      }
+      const data = await res.json();
+      document.getElementById('totalItems').textContent = data.total_items;
+      document.getElementById('freshItems').textContent = data.fresh_items;
+      document.getElementById('spoiledItems').textContent = data.spoiled_items;
+      document.getElementById('datasetPresent').textContent = data.dataset_present ? 'Yes' : 'No';
+      document.getElementById('imageDatasetPresent').textContent = data.image_dataset_present ? 'Yes' : 'No';
+      document.getElementById('imageModelPresent').textContent = data.image_model_present ? 'Yes' : 'No';
+
+      const storageTable = document.getElementById('storageTable');
+      storageTable.innerHTML = '';
+      data.storage_conditions.forEach(cond => {
+        storageTable.innerHTML += `<tr><td>${cond.location || 'Unknown'}</td><td>${cond.temperature}</td><td>${cond.humidity}</td><td>${cond.timestamp || 'N/A'}</td></tr>`;
+      });
+
+      const alertsDiv = document.getElementById('alerts');
+      alertsDiv.innerHTML = '';
+      if (!data.alerts || data.alerts.length === 0) {
+        alertsDiv.innerHTML = '<div class="alert info">No active alerts.</div>';
+      } else {
+        data.alerts.forEach(alert => {
+          alertsDiv.innerHTML += `<div class="alert ${alert.level}">${alert.level.toUpperCase()}: ${alert.message}</div>`;
+        });
+      }
+
+      document.getElementById('userSummary').innerHTML = `
+        <strong>User:</strong> ${data.user} <br>
+        <strong>Role:</strong> ${data.role}
+      `;
+    }
+
+    async function refreshInventory() {
+      const res = await fetchWithAuth('/api/items/');
+      if (!res.ok) {
+        setMessage('inventoryResult', 'Could not load inventory', true);
+        return;
+      }
+      const items = await res.json();
+      let html = '<tr><th>ID</th><th>Name</th><th>Type</th><th>Category</th><th>Temp</th><th>Humidity</th><th>Age</th><th>Status</th><th>Actions</th></tr>';
+      items.forEach(item => {
+        html += `<tr>
+          <td>${item.id}</td>
+          <td>${item.product_name}</td>
+          <td>${item.product_type}</td>
+          <td>${item.category}</td>
+          <td>${item.storage_temperature}</td>
+          <td>${item.humidity}</td>
+          <td>${item.age_days}</td>
+          <td>${item.status || ''}</td>
+          <td><button onclick="editItem(${item.id})">Edit</button> <button onclick="deleteItem(${item.id})">Delete</button></td>
+        </tr>`;
+      });
+      document.getElementById('inventoryTable').innerHTML = html;
+    }
+
+    function showNewItemForm() {
+      editingItemId = null;
+      document.getElementById('inventoryForm').innerHTML = getInventoryFormHtml();
+    }
+
+    function getInventoryFormHtml(item = {}) {
+      return `
+        <div><label>Name</label><br><input id="item_name" value="${item.product_name || ''}" /></div>
+        <div><label>Type</label><br><input id="item_type" value="${item.product_type || ''}" /></div>
+        <div><label>Category</label><br><input id="item_category" value="${item.category || ''}" /></div>
+        <div><label>Temperature</label><br><input id="item_temp" type="number" value="${item.storage_temperature || 4}" /></div>
+        <div><label>Humidity</label><br><input id="item_humidity" type="number" value="${item.humidity || 50}" /></div>
+        <div><label>Age days</label><br><input id="item_age" type="number" value="${item.age_days || 0}" /></div>
+        <div><label>Status</label><br><select id="item_status"><option value="Fresh" ${item.status === 'Fresh' ? 'selected' : ''}>Fresh</option><option value="Spoiled" ${item.status === 'Spoiled' ? 'selected' : ''}>Spoiled</option></select></div>
+        <button onclick="saveItem()">Save Item</button>
+      `;
+    }
+
+    async function saveItem() {
+      const payload = {
+        product_name: document.getElementById('item_name').value,
+        product_type: document.getElementById('item_type').value,
+        category: document.getElementById('item_category').value,
+        storage_temperature: Number(document.getElementById('item_temp').value),
+        humidity: Number(document.getElementById('item_humidity').value),
+        age_days: Number(document.getElementById('item_age').value),
+        status: document.getElementById('item_status').value,
+      };
+      const url = editingItemId ? `/api/items/${editingItemId}` : '/api/items/';
+      const method = editingItemId ? 'PUT' : 'POST';
+      const res = await fetchWithAuth(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        setMessage('inventoryResult', 'Failed to save item', true);
+        return;
+      }
+      setMessage('inventoryResult', 'Item saved successfully.');
+      document.getElementById('inventoryForm').innerHTML = '';
+      refreshInventory();
+    }
+
+    async function editItem(id) {
+      const res = await fetchWithAuth(`/api/items/${id}`);
+      if (!res.ok) {
+        setMessage('inventoryResult', 'Could not load item for edit', true);
+        return;
+      }
+      const item = await res.json();
+      editingItemId = item.id;
+      document.getElementById('inventoryForm').innerHTML = getInventoryFormHtml(item);
+    }
+
+    async function deleteItem(id) {
+      const res = await fetchWithAuth(`/api/items/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        setMessage('inventoryResult', 'Failed to delete item', true);
+        return;
+      }
+      setMessage('inventoryResult', 'Item deleted.');
+      refreshInventory();
+    }
+
+    async function uploadDataset() {
+      const file = document.getElementById('datasetFile').files[0];
+      if (!file) {
+        setMessage('datasetStatus', 'Choose a CSV file first.', true);
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetchWithAuth('/api/dataset/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      setMessage('datasetStatus', res.ok ? data.message : data.detail, !res.ok);
+    }
+
+    async function trainShelfLifeModel() {
+      const res = await fetchWithAuth('/api/dataset/train', { method: 'POST' });
+      const data = await res.json();
+      setMessage('datasetStatus', res.ok ? data.message : data.detail, !res.ok);
+    }
+
+    async function trainImageModel() {
+      const res = await fetchWithAuth('/api/dataset/image/train', { method: 'POST' });
+      const data = await res.json();
+      setMessage('imageDatasetStatus', res.ok ? data.message : data.detail, !res.ok);
+    }
+
+    async function refreshDatasetStatus() {
+      const res = await fetchWithAuth('/api/dataset/status');
+      if (!res.ok) {
+        setMessage('datasetStatus', 'Unable to fetch structured dataset status', true);
+        return;
+      }
+      const data = await res.json();
+      setMessage('datasetStatus', `Dataset exists: ${data.dataset_exists}. Model exists: ${data.model_exists}.`);
+    }
+
+    async function refreshImageDatasetStatus() {
+      const res = await fetchWithAuth('/api/dataset/image/status');
+      if (!res.ok) {
+        setMessage('imageDatasetStatus', 'Unable to fetch image dataset status', true);
+        return;
+      }
+      const data = await res.json();
+      setMessage('imageDatasetStatus', `Image dataset exists: ${data.dataset_exists}. Image model exists: ${data.model_exists}.`);
+    }
+  </script>
+</body>
+</html>

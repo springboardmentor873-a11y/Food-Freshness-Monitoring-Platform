@@ -1,23 +1,13 @@
-# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.env
+data/model.joblib
+data/inventory.json
+*.sqlite3
+.DS_Store
+Freshness44/
 .venv/
 venv/
-*.egg-info/
-
-# Backend runtime
-backend/food_freshness.db
-backend/uploads/
-backend/.env
-
-# Node / frontend
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
-
-# OS / editor
-.DS_Store
-.idea/
-.vscode/
-*.log
+.pytest_cache/

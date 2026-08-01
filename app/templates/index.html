@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Freshness Monitoring Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .container { max-width: 900px; margin: auto; }
+    h1 { color: #2f4f4f; }
+    input, button, select { font-size: 16px; padding: 10px; margin: 8px 0; width: 100%; }
+    button { width: auto; }
+    .card { border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 8px; }
+    .result { background: #f7f7f7; padding: 10px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Food Freshness Monitoring</h1>
+    <p>Upload a food image to assess freshness or predict shelf life.</p>
+    <div class="card">
+      <h2>Upload a Food Image</h2>
+      <input type="file" id="imageInput" accept="image/*" />
+      <button onclick="assessImage()">Assess Freshness</button>
+      <div id="imageResult" class="result"></div>
+    </div>
+    <div class="card">
+      <h2>Predict Shelf Life</h2>
+      <label>Product Type</label>
+      <input id="productType" placeholder="apple" />
+      <label>Category</label>
+      <select id="category">
+        <option value="fruit">fruit</option>
+        <option value="vegetable">vegetable</option>
+        <option value="dairy">dairy</option>
+        <option value="meat">meat</option>
+        <option value="other">other</option>
+      </select>
+      <label>Temperature (°C)</label>
+      <input id="temperature" type="number" value="8" />
+      <label>Humidity (%)</label>
+      <input id="humidity" type="number" value="55" />
+      <label>Age (days)</label>
+      <input id="ageDays" type="number" value="3" />
+      <button onclick="predictShelfLife()">Predict Shelf Life</button>
+      <div id="predictResult" class="result"></div>
+    </div>
+  </div>
+  <script>
+    async function assessImage() {
+      const input = document.getElementById('imageInput');
+      const result = document.getElementById('imageResult');
+      if (!input.files.length) {
+        result.textContent = 'Please choose an image file.';
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', input.files[0]);
+      const res = await fetch('/api/assess/', { method: 'POST', body: formData });
+      const data = await res.json();
+      result.innerHTML = `<strong>Freshness:</strong> ${data.freshness_label} (${(data.freshness_score*100).toFixed(1)}%)<br/><strong>Spoilage probability:</strong> ${(data.spoilage_probability*100).toFixed(1)}%`;
+    }
+    async function predictShelfLife() {
+      const result = document.getElementById('predictResult');
+      const payload = {
+        product_type: document.getElementById('productType').value,
+        category: document.getElementById('category').value,
+        temperature: Number(document.getElementById('temperature').value),
+        humidity: Number(document.getElementById('humidity').value),
+        age_days: Number(document.getElementById('ageDays').value),
+      };
+      const res = await fetch('/api/predict/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      result.innerHTML = `<strong>Estimated shelf life:</strong> ${data.estimated_shelf_life_days} days<br/><strong>Confidence:</strong> ${data.confidence}`;
+    }
+  </script>
+</body>
+</html>
