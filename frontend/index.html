@@ -1,14 +1,674 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Harvest Ledger — Food Freshness Monitoring</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Fresh Food Monitoring fruit and vegetable quality inspection"
+    >
+
+    <title>Fresh Food Monitoring</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css?v=30"
+    >
+</head>
+
+<body>
+    <div class="background-scene" aria-hidden="true">
+        <div class="background-glow glow-one"></div>
+        <div class="background-glow glow-two"></div>
+
+        <span class="floating-produce float-apple">🍎</span>
+        <span class="floating-produce float-orange">🍊</span>
+        <span class="floating-produce float-grapes">🍇</span>
+        <span class="floating-produce float-strawberry">🍓</span>
+        <span class="floating-produce float-watermelon">🍉</span>
+        <span class="floating-produce float-carrot">🥕</span>
+        <span class="floating-produce float-broccoli">🥦</span>
+        <span class="floating-produce float-tomato">🍅</span>
+        <span class="floating-produce float-pepper">🫑</span>
+        <span class="floating-produce float-cucumber">🥒</span>
+
+        <div class="background-grid"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="header-container">
+            <a href="#home" class="brand">
+                <div class="brand-mark">
+                    <span class="brand-leaf"></span>
+                    F
+                </div>
+
+                <div class="brand-copy">
+                    <h1>Fresh Food Monitoring</h1>
+                    <p>Fruit & Vegetable Quality Inspection</p>
+                </div>
+            </a>
+
+            <nav class="main-navigation">
+                <a href="#home">Home</a>
+                <a href="#inspection">Inspect Food</a>
+                <a href="#features">Features</a>
+                <a href="#workflow">How It Works</a>
+            </nav>
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+
+                <div>
+                    <strong>System online</strong>
+                    <small>EfficientNetB0 ready</small>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section" id="home">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <span class="hero-label">
+                        SMART PRODUCE QUALITY CHECK
+                    </span>
+
+                    <h2>
+                        Choose fresher food
+                        <em>with better confidence.</em>
+                    </h2>
+
+                    <p>
+                        Upload a fruit or vegetable image and receive a
+                        practical report containing the detected food name,
+                        freshness condition, quality grade, shelf-life
+                        estimate, spoilage risk and storage guidance.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#inspection" class="primary-action">
+                            Inspect food
+                            <span>→</span>
+                        </a>
+
+                        <a href="#features" class="secondary-action">
+                            View features
+                        </a>
+                    </div>
+
+                    <div class="hero-statistics">
+                        <div>
+                            <strong>96.89%</strong>
+                            <span>Test accuracy</span>
+                        </div>
+
+                        <div>
+                            <strong>44</strong>
+                            <span>Food classes</span>
+                        </div>
+
+                        <div>
+                            <strong>Fast</strong>
+                            <span>Image inspection</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="basket-board">
+                    <span class="board-pin pin-left"></span>
+                    <span class="board-pin pin-right"></span>
+
+                    <div class="board-header">
+                        <div>
+                            <span>TODAY'S FRESHNESS DESK</span>
+                            <h3>Fruit & vegetable basket</h3>
+                        </div>
+
+                        <span class="open-badge">OPEN</span>
+                    </div>
+
+                    <div class="basket-scene">
+                        <div class="basket-handle"></div>
+
+                        <div class="basket-food basket-apple">🍎</div>
+                        <div class="basket-food basket-orange">🍊</div>
+                        <div class="basket-food basket-banana">🍌</div>
+                        <div class="basket-food basket-grapes">🍇</div>
+                        <div class="basket-food basket-carrot">🥕</div>
+                        <div class="basket-food basket-broccoli">🥦</div>
+                        <div class="basket-food basket-tomato">🍅</div>
+                        <div class="basket-food basket-pepper">🫑</div>
+
+                        <div class="basket-body">
+                            <span>FRESH PRODUCE</span>
+                        </div>
+                    </div>
+
+                    <div class="board-steps">
+                        <div>
+                            <span>01</span>
+                            <strong>Upload</strong>
+                        </div>
+
+                        <div>
+                            <span>02</span>
+                            <strong>Identify</strong>
+                        </div>
+
+                        <div>
+                            <span>03</span>
+                            <strong>Decide</strong>
+                        </div>
+                    </div>
+
+                    <div class="board-note">
+                        <span>Check freshness.</span>
+                        <strong>Choose better.</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section" id="features">
+            <div class="section-heading">
+                <span>FOOD QUALITY INFORMATION</span>
+
+                <h2>
+                    Everything needed for a better buying decision.
+                </h2>
+
+                <p>
+                    The model prediction is converted into a clear,
+                    shopper-friendly food quality report.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <span>01</span>
+                        <div class="feature-icon">ID</div>
+                    </div>
+
+                    <h3>Food name</h3>
+
+                    <p>
+                        Clearly shows the detected fruit or vegetable name.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <span>02</span>
+                        <div class="feature-icon">✓</div>
+                    </div>
+
+                    <h3>Freshness condition</h3>
+
+                    <p>
+                        Displays whether the food is predicted as fresh
+                        or spoiled.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <span>03</span>
+                        <div class="feature-icon">A+</div>
+                    </div>
+
+                    <h3>Quality grade</h3>
+
+                    <p>
+                        Converts the model result into a simple quality grade.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <span>04</span>
+                        <div class="feature-icon">7D</div>
+                    </div>
+
+                    <h3>Shelf-life estimate</h3>
+
+                    <p>
+                        Shows estimated remaining days and a use-by date.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <span>05</span>
+                        <div class="feature-icon">!</div>
+                    </div>
+
+                    <h3>Spoilage risk</h3>
+
+                    <p>
+                        Displays spoilage probability and its risk category.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-header">
+                        <span>06</span>
+                        <div class="feature-icon">°C</div>
+                    </div>
+
+                    <h3>Storage guidance</h3>
+
+                    <p>
+                        Suggests storage method, temperature and handling.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="inspection-section" id="inspection">
+            <div class="section-heading">
+                <span>NEW FOOD INSPECTION</span>
+
+                <h2>Upload a fruit or vegetable image.</h2>
+
+                <p>
+                    Use one clear item, good lighting and a simple background.
+                </p>
+            </div>
+
+            <div class="inspection-layout">
+                <article class="upload-panel">
+                    <div class="panel-heading">
+                        <span class="panel-number">01</span>
+
+                        <div>
+                            <small>FOOD IMAGE</small>
+                            <h3>Select an image to inspect</h3>
+                        </div>
+                    </div>
+
+                    <label id="uploadArea" class="upload-area">
+                        <input
+                            type="file"
+                            id="foodImage"
+                            accept="image/jpeg,image/png,image/webp"
+                            hidden
+                        >
+
+                        <img
+                            id="imagePreview"
+                            class="image-preview hidden"
+                            alt="Selected food image"
+                        >
+
+                        <div
+                            id="uploadPlaceholder"
+                            class="upload-placeholder"
+                        >
+                            <div class="upload-symbol">
+                                <span class="upload-leaf"></span>
+                                +
+                            </div>
+
+                            <h4>Choose a food image</h4>
+
+                            <p>
+                                Drag and drop an image here or click to browse
+                                from your computer.
+                            </p>
+
+                            <small>
+                                JPG, PNG or WEBP · Maximum 10 MB
+                            </small>
+                        </div>
+                    </label>
+
+                    <div
+                        id="fileDetails"
+                        class="file-details hidden"
+                    >
+                        <div class="file-badge">IMG</div>
+
+                        <div class="file-information">
+                            <strong id="fileName"></strong>
+                            <span id="fileSize"></span>
+                        </div>
+
+                        <div
+                            id="detectedFoodPreview"
+                            class="detected-food-preview hidden"
+                        >
+                            <span>Detected food</span>
+                            <strong id="detectedFoodName">--</strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="removeFile"
+                            class="delete-button"
+                        >
+                            Delete
+                        </button>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="analyzeButton"
+                        class="inspect-button"
+                        disabled
+                    >
+                        <span id="buttonText">
+                            Check product quality
+                        </span>
+
+                        <span
+                            id="loadingSpinner"
+                            class="loading-spinner hidden"
+                        ></span>
+                    </button>
+
+                    <p
+                        id="errorMessage"
+                        class="error-message hidden"
+                    ></p>
+
+                    <div class="image-tips">
+                        <strong>For a clearer result</strong>
+
+                        <div>
+                            <span>One food item</span>
+                            <span>Good lighting</span>
+                            <span>Simple background</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="result-panel">
+                    <div id="emptyState" class="empty-state">
+                        <div class="empty-scanner">
+                            <span>QC</span>
+                            <div class="scanner-line"></div>
+                        </div>
+
+                        <small>FOOD QUALITY REPORT</small>
+
+                        <h3>Your inspection result will appear here.</h3>
+
+                        <p>
+                            Upload an image to see the fruit or vegetable name,
+                            freshness score, quality grade, shelf life and
+                            storage advice.
+                        </p>
+
+                        <div class="empty-tags">
+                            <span>Food name</span>
+                            <span>Freshness</span>
+                            <span>Shelf life</span>
+                            <span>Storage</span>
+                        </div>
+                    </div>
+
+                    <div
+                        id="reportContent"
+                        class="report-content hidden"
+                    >
+                        <div class="detected-food-banner">
+                            <span>DETECTED FRUIT OR VEGETABLE</span>
+                            <strong id="detectedFoodBannerName">--</strong>
+                        </div>
+
+                        <div class="report-header">
+                            <div>
+                                <small>FOOD IDENTIFIED</small>
+
+                                <h3 id="foodName">Apple</h3>
+
+                                <p id="predictionClass">
+                                    Apple_Fresh
+                                </p>
+                            </div>
+
+                            <span
+                                id="freshnessBadge"
+                                class="condition-badge"
+                            >
+                                Fresh
+                            </span>
+                        </div>
+
+                        <div class="inspection-meta">
+                            <div>
+                                <span>Inspection ID</span>
+                                <strong id="inspectionId">
+                                    FQ-000000
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Date</span>
+                                <strong id="inspectionDate">--</strong>
+                            </div>
+
+                            <div>
+                                <span>Time</span>
+                                <strong id="inspectionTime">--</strong>
+                            </div>
+                        </div>
+
+                        <div
+                            id="shopperDecision"
+                            class="shopper-decision"
+                        >
+                            <div class="decision-symbol">✓</div>
+
+                            <div>
+                                <small>BUYING RECOMMENDATION</small>
+
+                                <h4 id="buyRecommendation">
+                                    Recommended to buy
+                                </h4>
+
+                                <p id="decisionDescription">
+                                    This food appears suitable for purchase.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="score-layout">
+                            <div
+                                id="scoreGauge"
+                                class="score-gauge"
+                            >
+                                <div>
+                                    <strong id="freshnessScore">0</strong>
+                                    <span>Freshness score</span>
+                                </div>
+                            </div>
+
+                            <div class="metric-list">
+                                <div>
+                                    <span>Food name</span>
+                                    <strong id="metricFoodName">--</strong>
+                                </div>
+
+                                <div>
+                                    <span>Model confidence</span>
+                                    <strong id="confidence">0%</strong>
+                                </div>
+
+                                <div>
+                                    <span>Quality grade</span>
+                                    <strong id="qualityGrade">--</strong>
+                                </div>
+
+                                <div>
+                                    <span>Quality level</span>
+                                    <strong id="qualityLabel">--</strong>
+                                </div>
+
+                                <div>
+                                    <span>Spoilage risk</span>
+                                    <strong id="riskLevel">--</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="shelf-life-card">
+                            <div class="shelf-life-header">
+                                <div>
+                                    <small>ESTIMATED SHELF LIFE</small>
+
+                                    <h4 id="shelfLifeStatus">
+                                        Awaiting inspection
+                                    </h4>
+                                </div>
+
+                                <strong id="remainingDays">
+                                    0 days
+                                </strong>
+                            </div>
+
+                            <div class="shelf-track">
+                                <div
+                                    id="shelfProgressBar"
+                                    class="shelf-progress"
+                                ></div>
+                            </div>
+
+                            <p>
+                                Estimated use-by date:
+                                <strong id="consumeBefore">--</strong>
+                            </p>
+                        </div>
+
+                        <div class="report-grid">
+                            <article>
+                                <small>CONSUMPTION STATUS</small>
+
+                                <h4 id="consumptionStatus">--</h4>
+
+                                <p id="processingTime">
+                                    Processed in 0 seconds
+                                </p>
+                            </article>
+
+                            <article>
+                                <small>SPOILAGE PROBABILITY</small>
+
+                                <h4 id="spoilageProbability">0%</h4>
+
+                                <p>Model-based visual estimate</p>
+                            </article>
+
+                            <article>
+                                <small>STORAGE METHOD</small>
+
+                                <h4 id="storageMethod">--</h4>
+
+                                <p id="storageTemperature">--</p>
+                            </article>
+
+                            <article>
+                                <small>HANDLING TIP</small>
+
+                                <h4 id="storageTip">--</h4>
+
+                                <p>Recommended handling guidance</p>
+                            </article>
+                        </div>
+
+                        <div class="recommendation-box">
+                            <span class="recommendation-icon">i</span>
+
+                            <div>
+                                <small>QUALITY ADVICE</small>
+                                <p id="recommendationText"></p>
+                            </div>
+                        </div>
+
+                        <div class="model-details">
+                            <small>MODEL INFORMATION</small>
+
+                            <div>
+                                <span>EfficientNetB0</span>
+                                <span>TensorFlow</span>
+                                <span>44 classes</span>
+                                <span>96.89% accuracy</span>
+                            </div>
+                        </div>
+
+                        <p
+                            id="disclaimer"
+                            class="disclaimer"
+                        ></p>
+
+                        <button
+                            type="button"
+                            id="inspectAnother"
+                            class="inspect-another-button"
+                        >
+                            Inspect another food item
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="workflow-section" id="workflow">
+            <div class="section-heading">
+                <span>HOW IT WORKS</span>
+
+                <h2>From image to freshness decision.</h2>
+            </div>
+
+            <div class="workflow-grid">
+                <article>
+                    <span>01</span>
+                    <h3>Upload image</h3>
+                    <p>Select one clear fruit or vegetable image.</p>
+                </article>
+
+                <article>
+                    <span>02</span>
+                    <h3>Identify food</h3>
+                    <p>The model displays the detected food name.</p>
+                </article>
+
+                <article>
+                    <span>03</span>
+                    <h3>Evaluate quality</h3>
+                    <p>Freshness, risk and shelf life are evaluated.</p>
+                </article>
+
+                <article>
+                    <span>04</span>
+                    <h3>Make a decision</h3>
+                    <p>Review buying, consumption and storage advice.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <strong>Fresh Food Monitoring</strong>
+                <span>Fruit & Vegetable Quality Inspection</span>
+            </div>
+
+            <p>
+                EfficientNetB0 · TensorFlow · FastAPI
+            </p>
+        </div>
+    </footer>
+
+    <script src="/static/app.js?v=30"></script>
+</body>
 </html>
