@@ -1,51 +1,23 @@
-node_modules/
-dataset.zip
-.env
-dist/
-build/
-
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
-
-# Virtual environments
-venv/
-env/
 .venv/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# VS Code
-.vscode/
-
-# Python environment
+venv/
 *.egg-info/
 
-# OS files
+# Backend runtime
+backend/food_freshness.db
+backend/uploads/
+backend/.env
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS / editor
 .DS_Store
-
-# Logs
+.idea/
+.vscode/
 *.log
-
-# Large ML files
-*.h5
-*.hdf5
-*.keras
-*.pkl
-*.pickle
-*.joblib
-
-# Model files
-models/
-checkpoints/
-
-# Temporary files
-*.tmp
-*.temp
-
-# Datasets
-dataset/
-split_dataset/
-dataset.zip
