@@ -1,5 +1,6 @@
-function FreshnessChart() {
-  const bars = [80, 92, 88, 115, 135, 125, 160];
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+
+function FreshnessChart({ data }) {
 
   return (
     <div className="rounded-3xl bg-white p-8 shadow-sm">
@@ -12,44 +13,14 @@ function FreshnessChart() {
           </h2>
 
           <p className="mt-2 text-gray-500">
-            Average shelf-life rating over last 30 days
+            Daily fresh and spoiled predictions
           </p>
         </div>
 
-        <div className="flex items-center gap-6">
-
-          <div className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-full bg-green-500" />
-            Dairy
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="h-4 w-4 rounded-full bg-blue-500" />
-            Produce
-          </div>
-
-        </div>
 
       </div>
 
-      <div className="flex h-80 items-end justify-between">
-
-        {bars.map((bar, index) => (
-          <div key={index} className="flex flex-col items-center">
-
-            <div
-              className="w-16 rounded-t-xl bg-green-300"
-              style={{ height: `${bar}px` }}
-            />
-
-            <p className="mt-3 text-sm text-gray-500">
-              Week {index + 1}
-            </p>
-
-          </div>
-        ))}
-
-      </div>
+      <div className="h-80">{data.length ? <ResponsiveContainer><BarChart data={data}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="date" /><YAxis allowDecimals={false} /><Tooltip /><Legend /><Bar dataKey="fresh" fill="#22c55e" /><Bar dataKey="spoiled" fill="#ef4444" /></BarChart></ResponsiveContainer> : <p className="pt-24 text-center text-gray-500">No prediction data for this period.</p>}</div>
 
     </div>
   );

@@ -1,4 +1,5 @@
-import { Bell, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
+
 
 function NotificationsHeader() {
   return (

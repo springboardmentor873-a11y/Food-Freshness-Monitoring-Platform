@@ -4,52 +4,13 @@ import {
   BellRing,
 } from "lucide-react";
 
-const notifications = [
-
-  {
-    id: 1,
-    icon: <AlertTriangle className="text-red-500" />,
-    title: "Critical Expiry Alert",
-    message: "Premium Chicken will expire within 24 hours.",
-    time: "5 min ago",
-    color: "red",
-  },
-
-  {
-    id: 2,
-    icon: <BellRing className="text-orange-500" />,
-    title: "Inventory Running Low",
-    message: "Organic Strawberries stock is below threshold.",
-    time: "30 min ago",
-    color: "orange",
-  },
-
-  {
-    id: 3,
-    icon: <CheckCircle2 className="text-green-500" />,
-    title: "AI Scan Completed",
-    message: "Freshness analysis completed successfully.",
-    time: "1 hour ago",
-    color: "green",
-  },
-
-  {
-    id: 4,
-    icon: <BellRing className="text-blue-500" />,
-    title: "Weekly Report Generated",
-    message: "Inventory performance report is ready.",
-    time: "Today",
-    color: "blue",
-  },
-
-];
-
-function NotificationsList() {
+function NotificationsList({ items, onDelete, onRead }) {
   return (
 
     <div className="space-y-5">
 
-      {notifications.map((item) => (
+      {!items.length && <p className="rounded-3xl bg-white p-6 text-gray-500 shadow-sm">No notifications found.</p>}
+      {items.map((item) => (
 
         <div
           key={item.id}
@@ -59,21 +20,21 @@ function NotificationsList() {
           <div
             className={`rounded-2xl p-4
             ${
-              item.color === "red"
+              item.notification_type === "spoiled_food_alert"
                 ? "bg-red-100"
-                : item.color === "green"
+                : item.notification_type === "prediction_completed"
                 ? "bg-green-100"
-                : item.color === "orange"
+                : item.notification_type === "expiry_reminder"
                 ? "bg-orange-100"
                 : "bg-blue-100"
             }`}
           >
-            {item.icon}
+            {item.notification_type === "spoiled_food_alert" ? <AlertTriangle className="text-red-500" /> : item.notification_type === "prediction_completed" ? <CheckCircle2 className="text-green-500" /> : <BellRing className="text-blue-500" />}
           </div>
 
           <div className="flex-1">
 
-            <h3 className="text-xl font-semibold">
+            <h3 className={`text-xl font-semibold ${item.is_read ? "" : "text-blue-700"}`}>
               {item.title}
             </h3>
 
@@ -84,8 +45,9 @@ function NotificationsList() {
           </div>
 
           <span className="text-sm text-gray-400">
-            {item.time}
+            {new Date(item.created_at).toLocaleString()}
           </span>
+          <div className="flex gap-2"><button disabled={item.is_read} onClick={() => onRead(item.id)} type="button">Read</button><button className="text-red-600" onClick={() => onDelete(item.id)} type="button">Delete</button></div>
 
         </div>
 

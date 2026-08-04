@@ -1,6 +1,6 @@
 import { CalendarDays, FileDown } from "lucide-react";
 
-function ReportsHeader() {
+function ReportsHeader({ onGenerate }) {
   return (
     <div className="flex items-start justify-between">
 
@@ -22,7 +22,7 @@ function ReportsHeader() {
           Last 30 Days
         </button>
 
-        <button className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-medium text-white shadow">
+        <button className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-medium text-white shadow" onClick={onGenerate} type="button">
           <FileDown size={18} />
           Generate Report
         </button>

@@ -42,6 +42,7 @@ def create_access_token(
     payload = {
         "sub": subject,
         "role": role,
+        "token_type": "access",
         "iat": now,
         "exp": now + lifetime,
     }
@@ -50,6 +51,20 @@ def create_access_token(
         _get_jwt_secret_key(),
         algorithm=_get_jwt_algorithm(),
     )
+
+
+def create_refresh_token(*, subject: str, role: str, token_id: str) -> str:
+    """Create a signed, revocable refresh token."""
+    now = datetime.now(timezone.utc)
+    payload = {
+        "sub": subject,
+        "role": role,
+        "jti": token_id,
+        "token_type": "refresh",
+        "iat": now,
+        "exp": now + timedelta(days=_get_refresh_token_expire_days()),
+    }
+    return jwt.encode(payload, _get_jwt_secret_key(), algorithm=_get_jwt_algorithm())
 
 
 def decode_access_token(token: str) -> dict[str, Any]:
@@ -88,4 +103,11 @@ def _get_access_token_expire_minutes() -> int:
     value = getattr(settings, "ACCESS_TOKEN_EXPIRE_MINUTES", 30)
     if not isinstance(value, int) or value <= 0:
         raise RuntimeError("ACCESS_TOKEN_EXPIRE_MINUTES must be a positive integer")
+    return value
+
+
+def _get_refresh_token_expire_days() -> int:
+    value = getattr(settings, "REFRESH_TOKEN_EXPIRE_DAYS", 7)
+    if not isinstance(value, int) or value <= 0:
+        raise RuntimeError("REFRESH_TOKEN_EXPIRE_DAYS must be a positive integer")
     return value

@@ -27,10 +27,12 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = Field(min_length=32)
     JWT_ALGORITHM: Literal["HS256", "HS384", "HS512"] = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30, gt=0, le=1_440)
+    REFRESH_TOKEN_EXPIRE_DAYS: int = Field(default=7, gt=0, le=90)
 
     MODEL_PATH: str = Field(default="app/models/efficientnetb0.keras", min_length=1)
     UPLOAD_FOLDER: str = Field(default="app/uploads", min_length=1)
     MAX_UPLOAD_SIZE_BYTES: int = Field(default=10 * 1024 * 1024, gt=0)
+    SHELF_LIFE_RULES_JSON: str | None = None
 
     POSTGRES_HOST: str = Field(min_length=1)
     POSTGRES_PORT: int = Field(default=5432, ge=1, le=65_535)

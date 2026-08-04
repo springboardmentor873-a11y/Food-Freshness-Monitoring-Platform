@@ -4,7 +4,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-function NotificationSummary() {
+function NotificationSummary({ total, unread }) {
   return (
     <div className="space-y-6">
 
@@ -26,7 +26,7 @@ function NotificationSummary() {
 
             </div>
 
-            <span className="font-bold">3</span>
+            <span className="font-bold">{unread}</span>
 
           </div>
 
@@ -40,7 +40,7 @@ function NotificationSummary() {
 
             </div>
 
-            <span className="font-bold">8</span>
+            <span className="font-bold">{total - unread}</span>
 
           </div>
 
@@ -54,7 +54,7 @@ function NotificationSummary() {
 
             </div>
 
-            <span className="font-bold">41</span>
+            <span className="font-bold">{total}</span>
 
           </div>
 

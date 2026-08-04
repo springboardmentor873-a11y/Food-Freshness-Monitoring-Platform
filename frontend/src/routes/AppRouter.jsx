@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
@@ -9,43 +10,69 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import RoleProtectedRoute from "../components/auth/RoleProtectedRoute";
 
-// Dashboard
-import DashboardHome from "../pages/Dashboard/DashboardHome";
+// Lazy-loaded Workspaces
+const DashboardHome = lazy(() => import("../pages/Dashboard/DashboardHome"));
+const FoodDetection = lazy(() => import("../pages/FoodDetection/FoodDetection"));
+const Inventory = lazy(() => import("../pages/Inventory/Inventory"));
+const Analytics = lazy(() => import("../pages/Analytics/Analytics"));
+const Reports = lazy(() => import("../pages/Reports/Reports"));
+const Notifications = lazy(() => import("../pages/Notifications/Notifications"));
+const Profile = lazy(() => import("../pages/Profile/Profile"));
+const Admin = lazy(() => import("../pages/Admin/Admin"));
+const PredictionHistory = lazy(() => import("../pages/PredictionHistory/PredictionHistory"));
 
-import FoodDetection from "../pages/FoodDetection/FoodDetection";
-import Inventory from "../pages/Inventory/Inventory";
-import Analytics from "../pages/Analytics/Analytics";
-import Reports from "../pages/Reports/Reports";
-import Notifications from "../pages/Notifications/Notifications";
-import Profile from "../pages/Profile/Profile";
-import Admin from "../pages/Admin/Admin";
+function LoadingFallback() {
+  return (
+    <div className="flex h-96 w-full items-center justify-center">
+      <div className="h-12 w-12 animate-spin rounded-full border-4 border-green-600 border-t-transparent"></div>
+    </div>
+  );
+}
 
 function AppRouter() {
   return (
     <BrowserRouter>
-      <Routes>
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
 
-        {/* Login page WITHOUT DashboardLayout */}
-        <Route element={<AuthLayout />}>
-          <Route path="/" element={<Login />} />
-        </Route>
+          {/* Public Auth Routes */}
+          <Route element={<AuthLayout />}>
+            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+          </Route>
 
-        {/* Dashboard */}
-        <Route element={<DashboardLayout />}>
-        <Route path="/dashboard" element={<DashboardHome />} />
-        <Route path="/food-detection" element={<FoodDetection />} />
-        <Route path="/inventory" element={<Inventory />} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/admin" element={<Admin />} />
-        </Route>
+          {/* Protected Dashboard Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<DashboardHome />} />
+              <Route path="/food-detection" element={<FoodDetection />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/prediction-history" element={<PredictionHistory />} />
 
-      </Routes>
+              {/* Admin-only Protected Route */}
+              <Route element={<RoleProtectedRoute allowedRoles={["admin", "administrator"]} />}>
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+            </Route>
+          </Route>
+          <Route path="*" element={<Navigate replace to="/dashboard" />} />
+
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
 
+
 export default AppRouter;
+

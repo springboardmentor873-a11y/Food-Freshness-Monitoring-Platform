@@ -1,174 +1,201 @@
-const inventoryItems = [
-  {
-    id: 1,
-    image: "🍓",
-    name: "Organic Strawberries",
-    sku: "FRU-STR-092",
-    category: "Produce",
-    quantity: "450 Units",
-    unit: "Cases",
-    expiry: "Oct 24",
-    days: "In 3 days",
-    freshness: 82,
-    status: "Near Expiry",
-    statusColor: "red",
-  },
-  {
-    id: 2,
-    image: "🥛",
-    name: "Pasteurized Whole Milk",
-    sku: "DAI-MILK-201",
-    category: "Dairy",
-    quantity: "1,200 L",
-    unit: "Bottles",
-    expiry: "Oct 30",
-    days: "In 9 days",
-    freshness: 96,
-    status: "In Stock",
-    statusColor: "green",
-  },
-  {
-    id: 3,
-    image: "🥬",
-    name: "Fresh Lettuce",
-    sku: "VEG-LET-102",
-    category: "Produce",
-    quantity: "280 Units",
-    unit: "Boxes",
-    expiry: "Oct 26",
-    days: "In 5 days",
-    freshness: 91,
-    status: "In Stock",
-    statusColor: "green",
-  },
-  {
-    id: 4,
-    image: "🥩",
-    name: "Premium Chicken",
-    sku: "MEA-CHK-801",
-    category: "Meat",
-    quantity: "180 Units",
-    unit: "Packs",
-    expiry: "Tomorrow",
-    days: "Urgent",
-    freshness: 68,
-    status: "Critical",
-    statusColor: "red",
-  },
-];
+import { Edit2, Trash2 } from "lucide-react";
+import EmptyState from "../ui/EmptyState";
 
-function InventoryTable() {
+function InventoryTable({
+  items,
+  loading,
+  onEdit,
+  onDelete,
+  selectedIds = [],
+  onToggleSelect,
+  onToggleSelectAll,
+}) {
+  const isAllSelected =
+    items.length > 0 && items.every((item) => selectedIds.includes(item.id));
+
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-
+    <div className="overflow-hidden rounded-3xl bg-white shadow-sm border border-slate-100">
       {/* Table Header */}
-      <div className="grid grid-cols-8 border-b bg-gray-50 px-8 py-5 text-sm font-semibold uppercase tracking-wide text-gray-500">
-        <div></div>
-        <div>Product Info</div>
-        <div>Category</div>
-        <div>Quantity</div>
-        <div>Expiry</div>
-        <div>Freshness Index</div>
-        <div>Status</div>
-        <div className="text-right">Actions</div>
+      <div className="grid grid-cols-12 border-b bg-slate-50 px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 items-center">
+        <div className="col-span-1 flex items-center justify-center">
+          <input
+            type="checkbox"
+            checked={isAllSelected}
+            onChange={onToggleSelectAll}
+            disabled={items.length === 0}
+            className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+          />
+        </div>
+        <div className="col-span-3">Product Info</div>
+        <div className="col-span-2">Category</div>
+        <div className="col-span-2">Quantity & Storage</div>
+        <div className="col-span-2">Expiry Date</div>
+        <div className="col-span-1">Status</div>
+        <div className="col-span-1 text-right">Actions</div>
       </div>
 
-      {/* Table Rows */}
-
-      {inventoryItems.map((item) => (
-        <div
-          key={item.id}
-          className="grid grid-cols-8 items-center border-b px-8 py-6"
-        >
-
-          {/* Checkbox */}
-          <div>
-            <input type="checkbox" />
-          </div>
-
-          {/* Product */}
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 text-3xl">
-              {item.image}
-            </div>
-
-            <div>
-              <h3 className="font-semibold">{item.name}</h3>
-
-              <p className="text-sm text-gray-500">
-                SKU: {item.sku}
-              </p>
-            </div>
-          </div>
-
-          {/* Category */}
-          <div>
-            <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-              {item.category}
-            </span>
-          </div>
-
-          {/* Quantity */}
-          <div>
-            <p className="font-semibold">
-              {item.quantity}
-            </p>
-
-            <p className="text-sm text-gray-500">
-              {item.unit}
-            </p>
-          </div>
-
-          {/* Expiry */}
-          <div>
-            <p className="font-semibold">
-              {item.expiry}
-            </p>
-
-            <p className="text-sm text-red-500">
-              {item.days}
-            </p>
-          </div>
-
-          {/* Freshness */}
-          <div>
-            <p className="mb-2 font-semibold text-green-600">
-              {item.freshness}%
-            </p>
-
-            <div className="h-2 w-28 rounded-full bg-gray-200">
-              <div
-                className="h-2 rounded-full bg-green-500"
-                style={{ width: `${item.freshness}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Status */}
-          <div>
-            <span
-              className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                item.statusColor === "green"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-red-100 text-red-600"
-              }`}
+      {/* Loading Skeletons */}
+      {loading && (
+        <div className="divide-y divide-slate-100">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className="grid grid-cols-12 items-center px-6 py-5 animate-pulse"
             >
-              {item.status}
-            </span>
-          </div>
-
-          {/* Actions */}
-          <div className="text-right">
-            <button className="rounded-lg border px-4 py-2 hover:bg-gray-100">
-              View
-            </button>
-          </div>
-
+              <div className="col-span-1 flex justify-center">
+                <div className="h-4 w-4 rounded bg-slate-200" />
+              </div>
+              <div className="col-span-3 flex items-center gap-3">
+                <div className="h-12 w-12 rounded-2xl bg-slate-200" />
+                <div className="space-y-2">
+                  <div className="h-4 w-32 rounded bg-slate-200" />
+                  <div className="h-3 w-20 rounded bg-slate-200" />
+                </div>
+              </div>
+              <div className="col-span-2">
+                <div className="h-6 w-20 rounded-full bg-slate-200" />
+              </div>
+              <div className="col-span-2">
+                <div className="h-4 w-16 rounded bg-slate-200" />
+              </div>
+              <div className="col-span-2">
+                <div className="h-4 w-24 rounded bg-slate-200" />
+              </div>
+              <div className="col-span-1">
+                <div className="h-6 w-16 rounded-full bg-slate-200" />
+              </div>
+              <div className="col-span-1 flex justify-end gap-2">
+                <div className="h-8 w-8 rounded-lg bg-slate-200" />
+                <div className="h-8 w-8 rounded-lg bg-slate-200" />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
 
+      {/* Empty State */}
+      {!loading && items.length === 0 && (
+        <EmptyState
+          title="No inventory items found"
+          description="Try adjusting your category filter or search criteria, or add a new item."
+        />
+      )}
+
+      {/* Table Rows */}
+      {!loading && items.length > 0 && (
+        <div className="divide-y divide-slate-100">
+          {items.map((item) => {
+            const isSelected = selectedIds.includes(item.id);
+            const foodName = item.food_name || item.name || "Unnamed Item";
+            const isFresh = item.freshness_status === "fresh";
+
+            return (
+              <div
+                key={item.id}
+                className={`grid grid-cols-12 items-center px-6 py-4 text-sm transition hover:bg-slate-50/80 ${
+                  isSelected ? "bg-blue-50/40" : ""
+                }`}
+              >
+                {/* Checkbox */}
+                <div className="col-span-1 flex items-center justify-center">
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => onToggleSelect(item.id)}
+                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                </div>
+
+                {/* Product Info */}
+                <div className="col-span-3 flex items-center gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-2xl shadow-inner">
+                    🥗
+                  </div>
+                  <div className="overflow-hidden">
+                    <h3 className="font-bold text-slate-900 truncate">
+                      {foodName}
+                    </h3>
+                    <p className="text-xs text-slate-500 truncate">
+                      {item.storage_location}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Category */}
+                <div className="col-span-2">
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 border border-blue-100">
+                    {item.category}
+                  </span>
+                </div>
+
+                {/* Quantity */}
+                <div className="col-span-2">
+                  <p className="font-semibold text-slate-800">
+                    {item.quantity} Units
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {item.prediction || "Manual entry"}
+                  </p>
+                </div>
+
+                {/* Expiry */}
+                <div className="col-span-2">
+                  <p className="font-semibold text-slate-800">
+                    {new Date(item.expiry_date).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    Purchased: {new Date(item.purchase_date).toLocaleDateString()}
+                  </p>
+                </div>
+
+                {/* Status */}
+                <div className="col-span-1">
+                  <span
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                      isFresh
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-red-50 text-red-700 border border-red-200"
+                    }`}
+                  >
+                    {item.freshness_status || "Fresh"}
+                  </span>
+                </div>
+
+                {/* Actions */}
+                <div className="col-span-1 flex items-center justify-end gap-1">
+                  {onEdit && (
+                    <button
+                      type="button"
+                      onClick={() => onEdit(item)}
+                      title="Edit item"
+                      className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      type="button"
+                      onClick={() => onDelete(item.id)}
+                      title="Delete item"
+                      className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
 export default InventoryTable;
+

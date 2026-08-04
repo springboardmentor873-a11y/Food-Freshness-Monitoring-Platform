@@ -1,11 +1,4 @@
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-
-export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 30000,
-});
+import { apiClient } from "./api";
 
 export class InvalidPredictionResponseError extends Error {
   constructor() {
@@ -21,7 +14,13 @@ function isPredictionResponse(data) {
     Number.isFinite(data.confidence) &&
     data.confidence >= 0 &&
     data.confidence <= 1 &&
-    (data.freshness_status === "fresh" || data.freshness_status === "spoiled")
+    (data.freshness_status === "fresh" || data.freshness_status === "spoiled") &&
+    Number.isInteger(data.shelf_life_days) &&
+    data.shelf_life_days >= 0 &&
+    typeof data.storage_recommendation === "string" &&
+    typeof data.consumption_recommendation === "string" &&
+    typeof data.food_safety_advice === "string" &&
+    typeof data.waste_reduction_advice === "string"
   );
 }
 

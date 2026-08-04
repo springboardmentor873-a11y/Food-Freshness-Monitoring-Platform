@@ -171,7 +171,9 @@ function FoodDetection() {
             prediction={prediction}
             previewUrl={previewUrl}
             selectedFile={selectedFile}
+            onReset={clearSelectedFile}
           />
+
           <DetectionTipCard />
           <HowItWorksCard />
         </div>

@@ -1,51 +1,57 @@
-function AnalysisResultCard() {
+import { CheckCircle2, AlertTriangle, Settings } from "lucide-react";
+
+function AnalysisResultCard({ prediction, previewUrl, batchId }) {
+  const isFresh = prediction?.freshness_status?.toLowerCase() === "fresh";
+  const label = prediction?.prediction
+    ? prediction.prediction.replace("_", " ").toUpperCase()
+    : "FOOD ITEM";
+  const displayBatch = batchId || "BATCH #AV-2024-009";
+
+
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-
+    <div className="overflow-hidden rounded-3xl bg-white shadow-sm border border-slate-100">
       {/* Image Section */}
+      <div className="relative bg-slate-100 border-b border-slate-200">
 
-      <div className="relative">
-
-        {/* Fresh Badge */}
-
-        <div className="absolute left-5 top-5 rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow">
-          ✓ FRESH
+        {/* Status Badge */}
+        <div
+          className={`absolute left-5 top-5 z-10 flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold text-white shadow-lg backdrop-blur-md ${
+            isFresh ? "bg-green-500/90" : "bg-red-500/90"
+          }`}
+        >
+          {isFresh ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />}
+          <span>{isFresh ? "✓ FRESH" : "⚠️ SPOILED"}</span>
         </div>
 
-        {/* Placeholder Image */}
-
-        <img
-          src="https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=900"
-          alt="Food"
-          className="h-[500px] w-full object-cover"
-        />
-
+        {/* Uploaded or Selected Image */}
+        {previewUrl ? (
+          <img
+            src={previewUrl}
+            alt={label}
+            className="h-[380px] w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-[380px] w-full items-center justify-center bg-slate-800 text-slate-500">
+            <span className="text-sm font-semibold">No Image Preview</span>
+          </div>
+        )}
       </div>
 
-      {/* Details */}
-
+      {/* Details Bar */}
       <div className="flex items-center justify-between p-6">
-
         <div>
-
-          <h2 className="text-3xl font-bold text-slate-900">
-            Hass Avocados
+          <h2 className="text-2xl font-extrabold text-slate-900 capitalize">
+            {label.toLowerCase()}
           </h2>
-
-          <p className="mt-1 text-gray-500">
-            Batch #AV-2024-009
+          <p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+            {displayBatch}
           </p>
-
         </div>
 
-        {/* Settings */}
-
-        <button className="flex h-12 w-12 items-center justify-center rounded-xl border text-2xl hover:bg-gray-100">
-          ⚙️
+        <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition">
+          <Settings size={18} />
         </button>
-
       </div>
-
     </div>
   );
 }

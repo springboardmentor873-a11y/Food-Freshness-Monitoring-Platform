@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import {
   LayoutDashboard,
   ScanSearch,
@@ -8,11 +10,17 @@ import {
   Bell,
   User,
   Shield,
+  History,
   LogOut,
   ShieldCheck,
 } from "lucide-react";
 
 const menuItems = [
+  {
+    name: "Prediction History",
+    path: "/prediction-history",
+    icon: History,
+  },
   {
     name: "Dashboard",
     path: "/dashboard",
@@ -52,10 +60,26 @@ const menuItems = [
     name: "Admin",
     path: "/admin",
     icon: Shield,
+    roles: ["admin", "administrator"],
   },
 ];
 
 function Sidebar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const userRole = (user?.role || "consumer").toLowerCase();
+
+  const visibleMenuItems = menuItems.filter((item) => {
+    if (!item.roles) return true;
+    return item.roles.map((r) => r.toLowerCase()).includes(userRole);
+  });
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <aside className="flex h-screen w-72 flex-col border-r border-slate-200 bg-white">
 
@@ -92,9 +116,10 @@ function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-5 py-6">
 
-        {menuItems.map((item) => {
+        {visibleMenuItems.map((item) => {
 
           const Icon = item.icon;
+
 
           return (
 
@@ -132,6 +157,7 @@ function Sidebar() {
       <div className="border-t border-slate-200 p-5">
 
         <button
+          onClick={handleLogout}
           className="
           flex w-full items-center gap-4 rounded-2xl
           px-5 py-4 font-medium text-red-500

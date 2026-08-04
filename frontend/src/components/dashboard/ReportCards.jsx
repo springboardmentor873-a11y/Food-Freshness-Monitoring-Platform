@@ -1,106 +1,53 @@
-import {
-  TrendingUp,
-  Database,
-  Package,
-  Clock,
-} from "lucide-react";
+import { Clock, FileDown } from "lucide-react";
 
-const reports = [
-  {
-    icon: <TrendingUp size={28} />,
-    title: "Prediction Report",
-    name: "Weekly Accuracy & Throughput",
-    date: "Oct 24, 2023",
-    size: "12.4 MB",
-    status: "READY",
-    color: "green",
-  },
-
-  {
-    icon: <Database size={28} />,
-    title: "Inventory Report",
-    name: "Monthly Global Stock Analysis",
-    date: "Oct 22, 2023",
-    size: "Generating...",
-    status: "GENERATING",
-    color: "blue",
-  },
-
-  {
-    icon: <Package size={28} />,
-    title: "Shelf Life Report",
-    name: "Perishables Optimization Study",
-    date: "Oct 20, 2023",
-    size: "8.1 MB",
-    status: "READY",
-    color: "green",
-  },
-];
-
-function ReportCards() {
+function ReportCards({ downloading, onDownload }) {
   return (
     <div className="grid grid-cols-3 gap-6">
 
-      {reports.map((report, index) => (
+      {["pdf", "xlsx", "csv"].map((format) => (
 
         <div
-          key={index}
+          key={format}
           className="rounded-3xl bg-white p-6 shadow-sm"
         >
 
           <div className="mb-8 flex items-center justify-between">
 
             <div className="rounded-xl bg-slate-100 p-3">
-              {report.icon}
+              <FileDown size={28} />
             </div>
 
             <span
               className={`rounded-full px-4 py-1 text-xs font-semibold ${
-                report.color === "green"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-blue-100 text-blue-600"
+                "bg-green-100 text-green-600"
               }`}
             >
-              {report.status}
+              READY
             </span>
 
           </div>
 
           <p className="text-sm uppercase text-gray-400">
-            {report.title}
+            Prediction History
           </p>
 
           <h2 className="mt-3 text-4xl font-bold leading-tight">
-            {report.name}
+            {format.toUpperCase()} Export
           </h2>
 
           <div className="mt-8 flex items-center gap-4 text-gray-500">
 
             <Clock size={18} />
 
-            <span>{report.date}</span>
+            <span>Current account data</span>
 
           </div>
 
           <p className="mt-3 text-sm text-gray-500">
-            {report.size}
+            Includes all prediction history
           </p>
 
-          <div className="mt-8 grid grid-cols-3 gap-3">
-
-            <button className="rounded-lg border py-2 hover:bg-gray-50">
-              PDF
-            </button>
-
-            <button className="rounded-lg border py-2 hover:bg-gray-50">
-              Excel
-            </button>
-
-            <button className="rounded-lg border py-2 hover:bg-gray-50">
-              Print
-            </button>
-
-          </div>
+          <button className="mt-8 w-full rounded-lg border py-2 hover:bg-gray-50 disabled:opacity-60" disabled={Boolean(downloading)} onClick={() => onDownload(format)} type="button">{downloading === format ? "Generating..." : `Download ${format.toUpperCase()}`}</button>
 
         </div>
 
