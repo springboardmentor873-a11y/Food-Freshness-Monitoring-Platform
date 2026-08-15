@@ -142,9 +142,8 @@ function FoodDetection() {
         subtitle="Upload images for instant AI-powered freshness and spoilage analysis."
       />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-
-        {/* Left */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Main Center Area (2 columns wide) */}
         <div className="space-y-6 lg:col-span-2">
           <FoodUploadCard
             cameraInputRef={cameraInputRef}
@@ -161,10 +160,8 @@ function FoodDetection() {
             onPredict={handlePredict}
             onUpload={() => fileInputRef.current?.click()}
           />
-        </div>
 
-        {/* Right */}
-        <div className="space-y-6">
+          {/* Prominent Center AI Analysis Details View */}
           <LivePreviewCard
             error={error}
             isPredicting={isPredicting}
@@ -173,12 +170,15 @@ function FoodDetection() {
             selectedFile={selectedFile}
             onReset={clearSelectedFile}
           />
+        </div>
 
+        {/* Right Sidebar Column (1 column wide) */}
+        <div className="space-y-6 lg:col-span-1">
           <DetectionTipCard />
           <HowItWorksCard />
         </div>
-
       </div>
+
     </div>
   );
 }
