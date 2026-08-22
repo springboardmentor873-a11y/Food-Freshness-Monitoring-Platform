@@ -1,0 +1,6 @@
+{
+  "name": "FreshSense AI",
+  "description": "AI-Powered Food Freshness & Quality Monitoring Platform with computer vision spoilage detection, shelf-life prediction, storage monitoring, and smart inventory management.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
