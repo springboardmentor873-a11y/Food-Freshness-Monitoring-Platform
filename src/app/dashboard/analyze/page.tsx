@@ -95,6 +95,52 @@ export default function AnalyzePage() {
       const prediction = await predictFreshness(file, category);
       setResult(prediction);
       setCategory(prediction.fruitName); // Immediately update dropdown category selection to predicted fruit/veg
+      
+      // Persist the result to the current user's analysis history
+      const sessionUser = localStorage.getItem("user");
+      if (sessionUser) {
+        const currentUser = JSON.parse(sessionUser);
+        
+        const convertToBase64 = (f: File): Promise<string> => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(f);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+          });
+        };
+
+        try {
+          const base64Image = await convertToBase64(file);
+          
+          const historyRecord = {
+            id: prediction.id,
+            userEmail: currentUser.email,
+            userName: currentUser.name,
+            fruitName: prediction.fruitName,
+            category: prediction.fruitName, // Map category
+            dateAdded: prediction.date,
+            expiryDate: new Date(new Date().getTime() + prediction.remainingShelfLifeDays * 24 * 60 * 60 * 1000).toISOString(),
+            freshnessScore: prediction.freshnessScore,
+            status: prediction.status,
+            imageUrl: base64Image,
+            confidenceScore: prediction.confidenceScore,
+            remainingShelfLifeDays: prediction.remainingShelfLifeDays,
+            spoilageProbability: prediction.spoilageProbability,
+            storageRecommendation: prediction.storageRecommendation,
+            temperatureRecommendation: prediction.temperatureRecommendation,
+            humidityRecommendation: prediction.humidityRecommendation,
+            aiInsights: prediction.aiInsights
+          };
+
+          const historyStr = localStorage.getItem("analysisHistory");
+          const currentHistory = historyStr ? JSON.parse(historyStr) : [];
+          currentHistory.unshift(historyRecord);
+          localStorage.setItem("analysisHistory", JSON.stringify(currentHistory));
+        } catch (imgErr) {
+          console.error("Failed to save inspection to history", imgErr);
+        }
+      }
     } catch (error) {
       console.error("Error analyzing image", error);
     } finally {

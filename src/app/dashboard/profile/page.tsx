@@ -35,10 +35,26 @@ export default function ProfilePage() {
   };
 
   const handleSave = () => {
+    const storedUser = localStorage.getItem("user");
     const updatedUser = {
       name: `${firstName.trim()} ${lastName.trim()}`.trim(),
       email: email.trim()
     };
+
+    if (storedUser) {
+      const u = JSON.parse(storedUser);
+      const usersStr = localStorage.getItem("users");
+      if (usersStr) {
+        const users = JSON.parse(usersStr);
+        const idx = users.findIndex((user: any) => user.email === u.email.trim().toLowerCase());
+        if (idx !== -1) {
+          users[idx].name = updatedUser.name;
+          users[idx].email = updatedUser.email.trim().toLowerCase();
+          localStorage.setItem("users", JSON.stringify(users));
+        }
+      }
+    }
+
     localStorage.setItem("user", JSON.stringify(updatedUser));
     window.location.reload(); // Refresh to update TopNavbar
   };

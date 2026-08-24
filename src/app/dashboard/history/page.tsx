@@ -27,22 +27,49 @@ export default function HistoryPage() {
   const [selectedStatus, setSelectedStatus] = useState("All");
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchLocalHistory = () => {
       try {
-        const data = await getInventory();
-        setHistoryList(data);
+        const sessionUser = localStorage.getItem("user");
+        if (sessionUser) {
+          const currentUser = JSON.parse(sessionUser);
+          const historyStr = localStorage.getItem("analysisHistory");
+          if (historyStr) {
+            const fullHistory = JSON.parse(historyStr);
+            // Filter records belonging to this user
+            const userHistory = fullHistory.filter((item: any) => item.userEmail === currentUser.email);
+            setHistoryList(userHistory);
+          } else {
+            setHistoryList([]);
+          }
+        } else {
+          setHistoryList([]);
+        }
       } catch (error) {
-        console.error("Failed to load history data", error);
+        console.error("Failed to load local history data", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchLocalHistory();
   }, []);
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this inspection record from history?")) {
       setHistoryList(prev => prev.filter(item => item.id !== id));
+      
+      const sessionUser = localStorage.getItem("user");
+      if (sessionUser) {
+        const currentUser = JSON.parse(sessionUser);
+        const historyStr = localStorage.getItem("analysisHistory");
+        if (historyStr) {
+          const fullHistory = JSON.parse(historyStr);
+          // Keep all records except the matching ID belonging to the current user
+          const updatedHistory = fullHistory.filter(
+            (item: any) => !(item.id === id && item.userEmail === currentUser.email)
+          );
+          localStorage.setItem("analysisHistory", JSON.stringify(updatedHistory));
+        }
+      }
     }
   };
 
