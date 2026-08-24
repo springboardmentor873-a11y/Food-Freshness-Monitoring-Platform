@@ -41,7 +41,7 @@ export function Sidebar() {
       <div className="h-16 flex items-center px-6 border-b border-border/50">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-primary hover:opacity-80 transition-opacity">
           <Leaf className="w-6 h-6 fill-primary" />
-          <span>FreshAI</span>
+          <span>Food Freshness Monitoring</span>
         </Link>
       </div>
 

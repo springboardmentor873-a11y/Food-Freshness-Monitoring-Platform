@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Food Freshness AI",
+  title: "Food Freshness Monitoring",
   description: "AI-powered Food Freshness Monitoring Platform",
 };
 

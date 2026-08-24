@@ -126,7 +126,7 @@ export function AuthForm({ onLoginSuccess }: AuthFormProps) {
       <div className="w-full max-w-md z-10 animate-in fade-in slide-in-from-bottom-8 duration-500">
         <div className="flex items-center gap-2 font-bold text-3xl tracking-tight text-primary justify-center mb-8">
           <Leaf className="w-8 h-8 fill-primary" />
-          <span>FreshAI</span>
+          <span>Food Freshness Monitoring</span>
         </div>
 
         <Card className="glass-panel border-none shadow-xl">

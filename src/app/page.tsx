@@ -141,7 +141,7 @@ export default function LandingPage() {
 
   const testimonials = [
     {
-      quote: "FreshAI has transformed how we manage our fresh produce inventory. We've cut waste in Chamber B by 25% in just a month.",
+      quote: "Food Freshness Monitoring has transformed how we manage our fresh produce inventory. We've cut waste in Chamber B by 25% in just a month.",
       author: "Sarah Jenkins",
       role: "Cold Storage Operator, AgriCorp",
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80"
@@ -166,7 +166,7 @@ export default function LandingPage() {
       <header className="h-20 border-b border-border/50 flex items-center justify-between px-6 md:px-12 bg-white/50 dark:bg-black/20 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2 font-bold text-2xl tracking-tight text-primary">
           <Leaf className="w-8 h-8 fill-primary" />
-          <span>FreshAI</span>
+          <span>Food Freshness Monitoring</span>
         </div>
         <nav className="hidden md:flex gap-8 text-sm font-semibold text-muted-foreground">
           <Link href="#features" className="hover:text-primary transition-colors">Features</Link>
@@ -329,7 +329,7 @@ export default function LandingPage() {
         <section id="why-choose" className="py-20 border-t border-border/40 px-6 md:px-12">
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl font-black tracking-tight text-foreground">Why Choose FreshAI</h2>
+              <h2 className="text-3xl font-black tracking-tight text-foreground">Why Choose Food Freshness Monitoring</h2>
               <p className="text-sm text-muted-foreground mt-2">Optimizing food chains with precision predictions and waste mitigation.</p>
             </div>
 
@@ -418,7 +418,7 @@ export default function LandingPage() {
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-primary">
               <Leaf className="w-6 h-6 fill-primary" />
-              <span>FreshAI</span>
+              <span>Food Freshness Monitoring</span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Detect produce freshness, estimate remaining shelf life, and mitigate supply chain organic waste using state-of-the-art computer vision models.
@@ -452,7 +452,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto pt-8 border-t border-border/30 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-muted-foreground text-center sm:text-left">
-          <p>© 2026 FreshAI — Developed for Infosys Springboard Virtual Internship</p>
+          <p>© 2026 Food Freshness Monitoring — Developed for Infosys Springboard Virtual Internship</p>
           <p>Designed with Glassmorphic Tailwind Core</p>
         </div>
       </footer>
