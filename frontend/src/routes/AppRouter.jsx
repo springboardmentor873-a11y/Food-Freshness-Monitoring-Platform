@@ -14,6 +14,7 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import RoleProtectedRoute from "../components/auth/RoleProtectedRoute";
 
 // Lazy-loaded Workspaces
+const LandingPage = lazy(() => import("../pages/Landing/LandingPage"));
 const DashboardHome = lazy(() => import("../pages/Dashboard/DashboardHome"));
 const FoodDetection = lazy(() => import("../pages/FoodDetection/FoodDetection"));
 const Inventory = lazy(() => import("../pages/Inventory/Inventory"));
@@ -37,10 +38,11 @@ function AppRouter() {
     <BrowserRouter>
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
+          {/* Primary Landing Page Route */}
+          <Route path="/" element={<LandingPage />} />
 
           {/* Public Auth Routes */}
           <Route element={<AuthLayout />}>
-            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -65,14 +67,11 @@ function AppRouter() {
               </Route>
             </Route>
           </Route>
-          <Route path="*" element={<Navigate replace to="/dashboard" />} />
-
+          <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
   );
 }
 
-
 export default AppRouter;
-

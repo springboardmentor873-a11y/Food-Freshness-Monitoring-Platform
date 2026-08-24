@@ -1,46 +1,40 @@
 function Step({ number, text }) {
   return (
-    <div className="flex items-start gap-5">
-
-      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-green-100 font-bold text-green-600">
+    <div className="flex items-start gap-4">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-green-50 font-extrabold text-green-600 border border-green-200/60 text-xs">
         {number}
       </div>
 
-      <p className="leading-7 text-gray-600">
+      <p className="text-xs text-slate-600 leading-relaxed pt-1">
         {text}
       </p>
-
     </div>
   );
 }
 
 function HowItWorksCard() {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
-
-      <h3 className="mb-8 text-sm font-bold uppercase tracking-widest text-gray-600">
-        How It Works
+    <div id="how-it-works" className="scroll-mt-24 rounded-3xl bg-white p-6 shadow-sm border border-slate-200/80">
+      <h3 className="mb-6 text-xs font-bold uppercase tracking-wider text-slate-400">
+        How AI Quality Detection Works
       </h3>
 
-      <div className="space-y-8">
-
+      <div className="space-y-5">
         <Step
           number="1"
-          text="Upload a high-resolution image of your inventory item."
+          text="Upload or capture a high-resolution image of your food inventory item."
         />
 
         <Step
           number="2"
-          text="Our AI neural engine identifies freshness markers."
+          text="Our EfficientNetB0 neural model classifies surface decay and color spectra."
         />
 
         <Step
           number="3"
-          text="Receive a detailed report with estimated shelf life."
+          text="Receive an instant freshness rating, confidence score, and shelf-life prediction."
         />
-
       </div>
-
     </div>
   );
 }

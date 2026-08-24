@@ -214,6 +214,11 @@ function Inventory() {
           }}
           search={search}
           total={data.total}
+          onAddItem={() => {
+            setEditingItem(null);
+            setIsAddModalOpen(true);
+          }}
+          onImportClick={() => setIsImportModalOpen(true)}
         />
 
         {/* Bulk Action Bar when items selected */}

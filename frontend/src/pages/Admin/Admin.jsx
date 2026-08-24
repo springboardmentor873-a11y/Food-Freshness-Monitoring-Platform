@@ -4,6 +4,7 @@ import AdminStats from "../../components/dashboard/AdminStats";
 import UsersTable from "../../components/dashboard/UsersTable";
 import SystemStatus from "../../components/dashboard/SystemStatus";
 import RecentActivity from "../../components/dashboard/RecentActivity";
+import AddUserModal from "../../components/modals/AddUserModal";
 import PageTransition from "../../components/ui/PageTransition";
 import { getAdminStats, getAdminUsers, updateUserRole } from "../../services/admin";
 import { AlertCircle, CheckCircle, X } from "lucide-react";
@@ -15,6 +16,7 @@ function Admin() {
   const [error, setError] = useState("");
   const [toast, setToast] = useState({ message: "", type: "" });
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -62,6 +64,11 @@ function Admin() {
     }
   };
 
+  const handleUserAdded = (successMessage) => {
+    showToast(successMessage, "success");
+    setRefreshKey((prev) => prev + 1);
+  };
+
   return (
     <PageTransition>
       <div className="space-y-8 pb-12">
@@ -89,7 +96,7 @@ function Admin() {
           </div>
         )}
 
-        <AdminHeader />
+        <AdminHeader onAddUserClick={() => setIsAddUserOpen(true)} />
 
         {error && (
           <div className="flex items-center gap-3 rounded-2xl bg-red-50 p-4 text-sm font-medium text-red-700 border border-red-200">
@@ -115,6 +122,13 @@ function Admin() {
             <RecentActivity />
           </div>
         </div>
+
+        {/* Add User Modal */}
+        <AddUserModal
+          isOpen={isAddUserOpen}
+          onClose={() => setIsAddUserOpen(false)}
+          onSuccess={handleUserAdded}
+        />
       </div>
     </PageTransition>
   );

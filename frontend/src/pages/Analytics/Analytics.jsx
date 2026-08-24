@@ -6,13 +6,15 @@ import WasteReduction from "../../components/dashboard/WasteReduction";
 import QualityFeed from "../../components/dashboard/QualityFeed";
 import PageTransition from "../../components/ui/PageTransition";
 import { getAnalyticsOverview } from "../../services/analytics";
-import { AlertCircle } from "lucide-react";
+import { downloadPredictionReport } from "../../services/reports";
+import { AlertCircle, FileDown, LoaderCircle } from "lucide-react";
 
 function Analytics() {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [days, setDays] = useState(30);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -40,28 +42,60 @@ function Analytics() {
     };
   }, [days]);
 
+  const handleExportReport = async () => {
+    setExporting(true);
+    try {
+      await downloadPredictionReport("pdf");
+    } catch (err) {
+      setError(err.response?.data?.detail || "Failed to download analytics PDF report.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <PageTransition>
       <div className="space-y-8 pb-12">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-center md:justify-between">
           <AnalyticsHeader />
-          <div className="flex items-center gap-2 self-start md:self-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Time Range:
-            </span>
-            <select
-              value={days}
-              onChange={(e) => {
-                setDays(Number(e.target.value));
-                setLoading(true);
-              }}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm focus:border-blue-500 focus:outline-none cursor-pointer"
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm">
+              <span className="text-slate-400 font-bold uppercase tracking-wider">
+                Time:
+              </span>
+              <select
+                value={days}
+                onChange={(e) => {
+                  setDays(Number(e.target.value));
+                  setLoading(true);
+                }}
+                className="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer"
+              >
+                <option value={7}>Last 7 Days</option>
+                <option value={30}>Last 30 Days</option>
+                <option value={90}>Last 90 Days</option>
+                <option value={365}>Last 1 Year</option>
+              </select>
+            </div>
+
+            <button
+              onClick={handleExportReport}
+              disabled={exporting}
+              type="button"
+              className="flex items-center gap-2 rounded-2xl bg-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md disabled:opacity-50 cursor-pointer"
             >
-              <option value={7}>Last 7 Days</option>
-              <option value={30}>Last 30 Days</option>
-              <option value={90}>Last 90 Days</option>
-              <option value={365}>Last 1 Year</option>
-            </select>
+              {exporting ? (
+                <>
+                  <LoaderCircle size={15} className="animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <FileDown size={15} />
+                  Export Analytics PDF
+                </>
+              )}
+            </button>
           </div>
         </div>
 

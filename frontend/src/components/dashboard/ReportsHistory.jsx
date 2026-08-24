@@ -1,11 +1,11 @@
-import { FileText, CheckCircle2, Clock } from "lucide-react";
+import { FileText, CheckCircle2, Clock, FileDown } from "lucide-react";
 
-function ReportsHistory({ history = [], loading = false }) {
+function ReportsHistory({ history = [], loading = false, onDownload }) {
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-sm border border-slate-100">
-      <div className="flex items-center justify-between border-b border-slate-100 px-8 py-6">
+    <div className="overflow-hidden rounded-3xl bg-white shadow-sm border border-slate-200/80">
+      <div className="flex items-center justify-between border-b border-slate-100 px-8 py-6 bg-slate-50/50">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">
+          <h2 className="text-xl font-extrabold text-slate-900">
             Recent Archival History
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -13,20 +13,20 @@ function ReportsHistory({ history = [], loading = false }) {
           </p>
         </div>
 
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 border border-blue-100">
+        <span className="rounded-full bg-blue-50 px-3.5 py-1 text-xs font-bold text-blue-700 border border-blue-100">
           {history.length} Saved Records
         </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left">
-          <thead className="bg-slate-50 border-b border-slate-100">
-            <tr className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <thead className="bg-slate-50 border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <tr>
               <th className="px-8 py-4">Report Name</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4">Confidence</th>
               <th className="px-6 py-4">Generated Date</th>
-              <th className="px-6 py-4 text-center">Format</th>
+              <th className="px-6 py-4 text-center">Export Action</th>
             </tr>
           </thead>
 
@@ -62,14 +62,14 @@ function ReportsHistory({ history = [], loading = false }) {
                   >
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 font-bold">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 font-bold border border-blue-100">
                           <FileText size={18} />
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 capitalize">
+                          <p className="font-extrabold text-slate-900 capitalize">
                             {label.toLowerCase()} Analysis Report
                           </p>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-slate-400 font-mono">
                             ID: #{String(item.id).slice(0, 8)}
                           </p>
                         </div>
@@ -112,9 +112,14 @@ function ReportsHistory({ history = [], loading = false }) {
                     </td>
 
                     <td className="px-6 py-5 text-center">
-                      <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-mono font-bold text-slate-700">
-                        PDF
-                      </span>
+                      <button
+                        onClick={() => onDownload && onDownload("pdf")}
+                        type="button"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs cursor-pointer"
+                      >
+                        <FileDown size={14} className="text-blue-600" />
+                        <span>Download PDF</span>
+                      </button>
                     </td>
                   </tr>
                 );

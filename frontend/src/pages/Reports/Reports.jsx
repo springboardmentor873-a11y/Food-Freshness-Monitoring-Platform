@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ReportsHeader from "../../components/dashboard/ReportsHeader";
+import ReportsFilters from "../../components/dashboard/ReportsFilters";
 import ReportCards from "../../components/dashboard/ReportCards";
 import ReportsHistory from "../../components/dashboard/ReportsHistory";
 import PageTransition from "../../components/ui/PageTransition";
@@ -13,6 +14,8 @@ function Reports() {
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState("");
   const [toast, setToast] = useState({ message: "", type: "" });
+  const [reportType, setReportType] = useState("all");
+  const [status, setStatus] = useState("all");
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -45,12 +48,20 @@ function Reports() {
     };
   }, []);
 
+  const filteredHistory = useMemo(() => {
+    return history.filter((item) => {
+      if (status === "ready" && item.freshness_status !== "fresh") return false;
+      if (status === "archived" && item.freshness_status === "fresh") return false;
+      return true;
+    });
+  }, [history, status]);
+
   const download = async (format) => {
     setDownloading(format);
     setError("");
     try {
       await downloadPredictionReport(format);
-      showToast(`${format.toUpperCase()} report generated successfully.`);
+      showToast(`${format.toUpperCase()} system report generated successfully.`);
     } catch (requestError) {
       setError(
         requestError.response?.data?.detail || "Unable to generate the system report."
@@ -96,10 +107,21 @@ function Reports() {
           </div>
         )}
 
+        <ReportsFilters
+          reportType={reportType}
+          onTypeChange={setReportType}
+          status={status}
+          onStatusChange={setStatus}
+        />
+
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-12 space-y-8">
             <ReportCards downloading={downloading} onDownload={download} />
-            <ReportsHistory history={history} loading={loading} />
+            <ReportsHistory
+              history={filteredHistory}
+              loading={loading}
+              onDownload={download}
+            />
           </div>
         </div>
       </div>
