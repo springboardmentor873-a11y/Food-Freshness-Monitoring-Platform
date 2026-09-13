@@ -200,6 +200,9 @@ def seed_demo_data(
         purchase_date = today - timedelta(days=item["days_ago"])
         expiry_date = today + timedelta(days=item["expiry_days"])
 
+        temp_val = item.get("temp", 4.0 if item["status"] == "fresh" else 14.5)
+        hum_val = item.get("humidity", 82.0 if item["status"] == "fresh" else 92.0)
+
         # 1. Create Inventory Record
         inventory_item = InventoryItem(
             user_id=current_user.id,
@@ -212,6 +215,8 @@ def seed_demo_data(
             prediction=item["prediction"],
             confidence=item["confidence"],
             freshness_status=item["status"],
+            storage_temperature=temp_val,
+            storage_humidity=hum_val,
         )
         db.add(inventory_item)
         created_items_count += 1

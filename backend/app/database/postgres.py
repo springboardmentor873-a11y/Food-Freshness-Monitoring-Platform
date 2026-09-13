@@ -52,6 +52,13 @@ def create_db_engine():
                 conn.execute(text("ALTER TABLE users ADD COLUMN avatar_url VARCHAR(500)"))
             if "notification_preferences" not in columns:
                 conn.execute(text("ALTER TABLE users ADD COLUMN notification_preferences TEXT"))
+
+            inv_columns = [row[1] for row in conn.execute(text("PRAGMA table_info(inventory_items)")).fetchall()]
+            if "storage_temperature" not in inv_columns:
+                conn.execute(text("ALTER TABLE inventory_items ADD COLUMN storage_temperature FLOAT"))
+            if "storage_humidity" not in inv_columns:
+                conn.execute(text("ALTER TABLE inventory_items ADD COLUMN storage_humidity FLOAT"))
+
             conn.commit()
 
         return sqlite_eng

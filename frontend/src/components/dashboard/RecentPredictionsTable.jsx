@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
+import ProductThumbnail from "../ui/ProductThumbnail";
 
 function RecentPredictionsTable({ predictions = [], loading = false }) {
   const navigate = useNavigate();
@@ -91,9 +92,7 @@ function RecentPredictionsTable({ predictions = [], loading = false }) {
                   >
                     <td className="px-8 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-lg shadow-inner">
-                          {isFresh ? "🍏" : "🍎"}
-                        </div>
+                        <ProductThumbnail name={item.prediction || "food"} size="sm" />
                         <div>
                           <p className="font-bold text-slate-900 capitalize">
                             {item.prediction || "Analyzed Item"}

@@ -16,6 +16,8 @@ class InventoryFields(BaseModel):
     prediction: str | None = None
     confidence: float | None = None
     freshness_status: str | None = None
+    storage_temperature: float | None = None
+    storage_humidity: float | None = None
 
     @model_validator(mode="after")
     def validate_dates(self) -> "InventoryFields":
@@ -38,6 +40,8 @@ class InventoryUpdate(BaseModel):
     prediction: str | None = None
     confidence: float | None = None
     freshness_status: str | None = None
+    storage_temperature: float | None = None
+    storage_humidity: float | None = None
 
 
 

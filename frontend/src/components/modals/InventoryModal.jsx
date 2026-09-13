@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, PackagePlus, Edit3 } from "lucide-react";
+import { X, PackagePlus, Edit3, Thermometer } from "lucide-react";
 
 const CATEGORY_OPTIONS = [
   "Bread",
@@ -43,6 +43,16 @@ function InventoryModal({ isOpen, onClose, onSave, itemToEdit }) {
   const [freshnessStatus, setFreshnessStatus] = useState(
     itemToEdit?.freshness_status || "fresh"
   );
+  const [storageTemperature, setStorageTemperature] = useState(
+    itemToEdit?.storage_temperature != null
+      ? itemToEdit.storage_temperature.toString()
+      : "4.2"
+  );
+  const [storageHumidity, setStorageHumidity] = useState(
+    itemToEdit?.storage_humidity != null
+      ? itemToEdit.storage_humidity.toString()
+      : "82"
+  );
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -78,6 +88,8 @@ function InventoryModal({ isOpen, onClose, onSave, itemToEdit }) {
         prediction: prediction.trim() || null,
         confidence: confidence ? Number(confidence) / 100 : null,
         freshness_status: freshnessStatus || null,
+        storage_temperature: storageTemperature ? Number(storageTemperature) : 4.2,
+        storage_humidity: storageHumidity ? Number(storageHumidity) : 82.0,
       };
       await onSave(payload, itemToEdit?.id);
       onClose();
@@ -105,14 +117,14 @@ function InventoryModal({ isOpen, onClose, onSave, itemToEdit }) {
               </h2>
               <p className="text-sm text-slate-500">
                 {isEditing
-                  ? "Update item details, expiration, and location."
-                  : "Track new perishables in your inventory system."}
+                  ? "Update item details, IoT telemetry, and location."
+                  : "Track new perishables and cold-chain sensor status."}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -187,6 +199,47 @@ function InventoryModal({ isOpen, onClose, onSave, itemToEdit }) {
                 placeholder="e.g. Main Refrigerator Shelf 2"
                 className="w-full rounded-xl border border-slate-200 p-3 text-sm focus:border-blue-500 focus:outline-none"
               />
+            </div>
+          </div>
+
+          {/* IoT Cold-Chain Sensor Telemetry Inputs */}
+          <div className="rounded-2xl bg-blue-50/60 p-4 border border-blue-100">
+            <div className="flex items-center gap-1.5 mb-2">
+              <Thermometer size={14} className="text-blue-600" />
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-900">
+                IoT Cold-Chain Telemetry
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">
+                  Storage Temp (°C)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={storageTemperature}
+                  onChange={(e) => setStorageTemperature(e.target.value)}
+                  placeholder="4.2"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs font-semibold focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">
+                  Relative Humidity (% RH)
+                </label>
+                <input
+                  type="number"
+                  step="1"
+                  min="0"
+                  max="100"
+                  value={storageHumidity}
+                  onChange={(e) => setStorageHumidity(e.target.value)}
+                  placeholder="82"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs font-semibold focus:border-blue-500 focus:outline-none"
+                />
+              </div>
             </div>
           </div>
 
@@ -273,14 +326,14 @@ function InventoryModal({ isOpen, onClose, onSave, itemToEdit }) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+              className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
             >
               {saving ? "Saving..." : isEditing ? "Update Item" : "Create Item"}
             </button>
